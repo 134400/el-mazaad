@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best XI Auction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pitch-dark:#0B2E1F;
+    --pitch-mid:#123C29;
+    --pitch-line: rgba(244,240,228,0.08);
+    --chalk:#F4F0E4;
+    --chalk-dim: rgba(244,240,228,0.6);
+    --gold:#D4AF37;
+    --blue:#2C6FBB;
+    --blue-dim: rgba(44,111,187,0.16);
+    --red:#C0392B;
+    --red-dim: rgba(192,57,43,0.16);
+    --ink:#08170F;
+    --panel: rgba(8,23,15,0.55);
+    --panel-line: rgba(244,240,228,0.12);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(244,240,228,0.05) 0, rgba(244,240,228,0.05) 1px, transparent 1px) 0 0/64px 64px,
+      linear-gradient(180deg, var(--pitch-dark) 0%, var(--pitch-mid) 55%, var(--pitch-dark) 100%);
+    color:var(--chalk);
+    font-family:'Inter', sans-serif;
+    padding:28px 16px 60px;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    top:50%; left:50%;
+    width:560px; height:560px;
+    border:1px solid var(--pitch-line);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    z-index:0;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    top:0; left:50%;
+    width:1px; height:100%;
+    background:var(--pitch-line);
+    transform:translateX(-50%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .wrap{max-width:920px;margin:0 auto;position:relative;z-index:1;}
+
+  h1.masthead{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:clamp(30px, 5vw, 44px);
+    letter-spacing:0.5px;
+    margin:0 0 4px;
+    text-align:center;
+  }
+  .masthead span{color:var(--gold);}
+  .sub{
+    text-align:center;
+    color:var(--chalk-dim);
+    font-size:14px;
+    margin:0 0 30px;
+  }
+
+  /* ---------- START SCREEN ---------- */
+  #startScreen{
+    max-width:460px;
+    margin:40px auto;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:32px 28px;
+    backdrop-filter: blur(2px);
+  }
+  .field-row{margin-bottom:18px;}
+  .field-row label{
+    display:block;
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    letter-spacing:0.4px;
+    margin-bottom:6px;
+  }
+  .field-row.blue label{color:var(--blue);}
+  .field-row.red label{color:var(--red);}
+  .field-row input{
+    width:100%;
+    padding:11px 12px;
+    background:rgba(244,240,228,0.06);
+    border:1px solid var(--panel-line);
+    border-radius:4px;
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+  }
+  .field-row input:focus{outline:1px solid var(--gold);}
+  .rules{
+    font-size:13px;
+    line-height:1.6;
+    color:var(--chalk-dim);
+    margin:20px 0 24px;
+    border-top:1px solid var(--panel-line);
+    padding-top:16px;
+  }
+  .rules b{color:var(--chalk);}
+
+  button{
+    font-family:'Oswald',sans-serif;
+    cursor:pointer;
+    border:none;
+    letter-spacing:0.3px;
+  }
+  .btn-primary{
+    width:100%;
+    padding:14px;
+    background:var(--gold);
+    color:var(--ink);
+    font-size:16px;
+    font-weight:600;
+    border-radius:4px;
+    transition:transform .12s ease, filter .12s ease;
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:active{transform:scale(0.98);}
+
+  /* ---------- SCOREBOARD ---------- */
+  #gameScreen{display:none;}
+
+  .scoreboard{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:12px;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:16px 20px;
+    margin-bottom:22px;
+  }
+  .score-side{display:flex; flex-direction:column; gap:4px;}
+  .score-side.right{align-items:flex-end;}
+  .team-name{
+    font-family:'Oswald',sans-serif;
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:0.3px;
+  }
+  .score-side.blue .team-name{color:var(--blue);}
+  .score-side.red .team-name{color:var(--red);}
+  .team-stat{font-size:12px;color:var(--chalk-dim);}
+  .team-stat b{color:var(--chalk);font-weight:600;}
+  .vs{
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    color:var(--chalk-dim);
+    letter-spacing:1px;
+  }
+
+  /* ---------- AUCTION STAGE ---------- */
+  .stage{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:26px 24px;
+    margin-bottom:18px;
+    text-align:center;
+  }
+  .stage-label{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--chalk-dim);
+    margin-bottom:14px;
+  }
+  .player-tag{
+    display:inline-block;
+    font-family:'Oswald',sans-serif;
+    font-size:11px;
+    letter-spacing:1px;
+    padding:3px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+  .player-tag.icon{background:rgba(212,175,55,0.18); color:var(--gold); border:1px solid rgba(212,175,55,0.4);}
+  .player-tag.current{background:rgba(244,240,228,0.1); color:var(--chalk); border:1px solid var(--panel-line);}
+
+  .player-name{
+    font-family:'Oswald',sans-serif;
+    font-size:clamp(26px,4vw,36px);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  .player-meta{
+    font-size:13px;
+    color:var(--chalk-dim);
+    margin-bottom:18px;
+  }
+  .player-meta .rating{color:var(--gold); font-weight:600;}
+
+  .bid-display{
+    display:flex;
+    justify-content:center;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:4px;
+  }
+  .bid-amount{
+    font-family:'Oswald',sans-serif;
+    font-size:44px;
+    font-weight:700;
+  }
+  .bid-unit{font-size:14px; color:var(--chalk-dim);}
+  .bid-leader{
+    font-size:13px;
+    min-height:18px;
+    margin-bottom:4px;
+  }
+  .bid-leader .lb{font-weight:600;}
+  .bid-leader.blue-lead .lb{color:var(--blue);}
+  .bid-leader.red-lead .lb{color:var(--red);}
+
+  .turn-flag{
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    letter-spacing:0.5px;
+    margin-top:14px;
+    padding:8px;
+    border-radius:4px;
+  }
+  .turn-flag.blue{background:var(--blue-dim); color:var(--blue);}
+  .turn-flag.red{background:var(--red-dim); color:var(--red);}
+
+  /* ---------- BID PANELS ---------- */
+  .panels{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .panel{
+    border-radius:6px;
+    padding:18px;
+    border:1px solid var(--panel-line);
+    background:var(--panel);
+    transition:box-shadow .15s ease, border-color .15s ease;
+    opacity:0.45;
+  }
+  .panel.active{opacity:1;}
+  .panel.active.blue{border-color:var(--blue); box-shadow:0 0 0 1px var(--blue) inset;}
+  .panel.active.red{border-color:var(--red); box-shadow:0 0 0 1px var(--red) inset;}
+
+  .panel-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+  }
+  .panel-head .name{font-family:'Oswald',sans-serif; font-weight:600; font-size:15px;}
+  .panel.blue .panel-head .name{color:var(--blue);}
+  .panel.red .panel-head .name{color:var(--red);}
+  .panel-head .budget{font-size:13px; color:var(--chalk-dim);}
+
+  .bid-buttons{display:flex; gap:8px; margin-bottom:8px;}
+  .bid-buttons button{
+    flex:1;
+    padding:10px 4px;
+    font-size:14px;
+    font-weight:600;
+    border-radius:4px;
+    background:rgba(244,240,228,0.08);
+    color:var(--chalk);
+    transition:filter .12s ease;
+  }
+  .panel.blue .bid-buttons button:hover:not(:disabled){background:var(--blue);}
+  .panel.red .bid-buttons button:hover:not(:disabled){background:var(--red);}
+  .bid-buttons button:disabled{opacity:0.3; cursor:not-allowed;}
+
+  .pass-btn{
+    width:100%;
+    padding:9px;
+    font-size:13px;
+    border-radius:4px;
+    background:transparent;
+    border:1px solid var(--panel-line) !important;
+    color:var(--chalk-dim);
+  }
+  .pass-btn:hover:not(:disabled){color:var(--chalk); border-color:var(--chalk-dim) !important;}
+  .pass-btn:disabled{opacity:0.3; cursor:not-allowed;}
+
+  .panel-note{font-size:11px; color:var(--chalk-dim); margin-top:8px; min-height:14px;}
+
+  /* ---------- NEXT / LOG ---------- */
+  .next-wrap{text-align:center; margin-bottom:22px; min-height:50px;}
+  #nextBtn{display:none; padding:12px 30px; background:var(--gold); color:var(--ink); font-weight:600; border-radius:4px; font-size:14px;}
+
+  .log-panel{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:14px 18px;
+    margin-bottom:22px;
+  }
+  .log-title{font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:1.5px; color:var(--chalk-dim); margin-bottom:10px;}
+  .log-list{max-height:130px; overflow-y:auto; font-size:13px; line-height:1.9; color:var(--chalk-dim);}
+  .log-list div span.b{color:var(--blue);}
+  .log-list div span.r{color:var(--red);}
+  .log-list div span.g{color:var(--gold);}
+
+  /* ---------- SQUADS ---------- */
+  .squads{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .squad-box{
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:16px 18px;
+    background:var(--panel);
+  }
+  .squad-box h3{
+    font-family:'Oswald',sans-serif;
+    font-size:14px;
+    margin:0 0 10px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .squad-box.blue h3{color:var(--blue);}
+  .squad-box.red h3{color:var(--red);}
+  .squad-list{list-style:none; margin:0; padding:0; font-size:13px;}
+  .squad-list li{
+    display:flex; justify-content:space-between;
+    padding:5px 0;
+    border-bottom:1px solid rgba(244,240,228,0.06);
+  }
+  .squad-list li:last-child{border-bottom:none;}
+  .squad-list .p-name{color:var(--chalk);}
+  .squad-list .p-info{color:var(--chalk-dim); font-size:12px;}
+  .squad-empty{color:var(--chalk-dim); font-size:12px; font-style:italic;}
+
+  /* ---------- END SCREEN ---------- */
+  #endScreen{display:none; text-align:center;}
+  .final-banner{
+    font-family:'Oswald',sans-serif;
+    font-size:clamp(24px,4vw,32px);
+    font-weight:700;
+    margin:6px 0 26px;
+    color:var(--gold);
+  }
+  .final-squads{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:26px;
+    text-align:left;
+  }
+  .btn-secondary{
+    padding:12px 26px;
+    background:transparent;
+    border:1px solid var(--panel-line) !important;
+    color:var(--chalk);
+    border-radius:4px;
+    font-size:14px;
+  }
+  .btn-secondary:hover{border-color:var(--gold) !important; color:var(--gold);}
+
+  /* ---------- MATCH SIMULATION ---------- */
+  .match-panel{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:6px;
+    padding:22px 24px;
+    margin-bottom:26px;
+    text-align:center;
+  }
+  .match-panel .stage-label{margin-bottom:16px;}
+  .match-score{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .match-score .side-name{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:15px;
+  }
+  .match-score .side-name.left{text-align:right; color:var(--blue);}
+  .match-score .side-name.right{text-align:left; color:var(--red);}
+  .match-score .score{
+    font-family:'Oswald',sans-serif;
+    font-size:clamp(32px,6vw,48px);
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .match-clock{
+    font-size:12px;
+    color:var(--chalk-dim);
+    letter-spacing:1px;
+    margin-bottom:18px;
+  }
+  #simulateBtn{
+    padding:12px 26px;
+    background:var(--gold);
+    color:var(--ink);
+    font-weight:600;
+    border-radius:4px;
+    font-size:14px;
+    margin-bottom:16px;
+  }
+  .commentary{
+    text-align:left;
+    max-height:220px;
+    overflow-y:auto;
+    border-top:1px solid var(--panel-line);
+    padding-top:14px;
+    display:none;
+  }
+  .commentary.show{display:block;}
+  .commentary-row{
+    display:flex;
+    gap:10px;
+    font-size:13px;
+    line-height:1.7;
+    color:var(--chalk-dim);
+  }
+  .commentary-row .min{
+    font-family:'Oswald',sans-serif;
+    color:var(--gold);
+    flex-shrink:0;
+    width:34px;
+  }
+  .commentary-row.goal{color:var(--chalk); font-weight:600;}
+  .commentary-row.goal .min{color:var(--chalk);}
+  .favorite-tag{
+    font-size:12px;
+    color:var(--chalk-dim);
+    margin-top:2px;
+  }
+
+  @media (max-width:640px){
+    .scoreboard{grid-template-columns:1fr; text-align:center; gap:10px;}
+    .score-side.right{align-items:center;}
+    .score-side{align-items:center;}
+    .vs{order:2;}
+  }
+
+  @media (max-width:560px){
+    .panels{grid-template-columns:1fr;}
+    .squads{grid-template-columns:1fr;}
+    .final-squads{grid-template-columns:1fr;}
+    .match-score{grid-template-columns:1fr; gap:2px;}
+    .match-score .side-name.left, .match-score .side-name.right{text-align:center;}
+  }
+
+  @media (max-width:420px){
+    body{padding:20px 10px 48px;}
+    .stage{padding:20px 14px;}
+    #startScreen{padding:24px 18px;}
+    .bid-buttons{gap:6px;}
+    .bid-buttons button{padding:10px 2px; font-size:13px;}
+    .panel{padding:14px;}
+    .squad-box{padding:14px;}
+    .bid-amount{font-size:36px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1 class="masthead">BEST <span>XI</span> AUCTION</h1>
+  <p class="sub">Build your ultimate football club — legends and current stars, one bid at a time.</p>
+
+  <!-- START SCREEN -->
+  <div id="startScreen">
+    <div class="field-row blue">
+      <label>MANAGER ONE — TEAM NAME</label>
+      <input type="text" id="nameA" placeholder="Team Blue" maxlength="18">
+    </div>
+    <div class="field-row red">
+      <label>MANAGER TWO — TEAM NAME</label>
+      <input type="text" id="nameB" placeholder="Team Red" maxlength="18">
+    </div>
+    <div class="rules">
+      Each manager starts with a <b>500 credit</b> budget. Players — a mix of <b>Icons</b> and <b>current stars</b> — go up for auction one at a time. On your turn, raise the bid or pass. When both sides pass in a row, the highest bidder wins the player. Build a squad of <b>11</b> before the pool runs dry — highest total rating wins.
+    </div>
+    <button class="btn-primary" id="startBtn">Start the Auction</button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen">
+
+    <div class="scoreboard">
+      <div class="score-side blue">
+        <span class="team-name" id="sbNameA">TEAM BLUE</span>
+        <span class="team-stat">Budget: <b id="sbBudgetA">500</b> &nbsp;·&nbsp; Squad: <b id="sbSquadA">0</b>/11</span>
+      </div>
+      <span class="vs">VS</span>
+      <div class="score-side red right">
+        <span class="team-name" id="sbNameB">TEAM RED</span>
+        <span class="team-stat">Budget: <b id="sbBudgetB">500</b> &nbsp;·&nbsp; Squad: <b id="sbSquadB">0</b>/11</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-label">NOW UP FOR AUCTION</div>
+      <span class="player-tag" id="playerTag">ICON</span>
+      <h2 class="player-name" id="playerName">—</h2>
+      <div class="player-meta">Position <b id="playerPos">—</b> &nbsp;·&nbsp; Rating <span class="rating" id="playerRating">—</span></div>
+
+      <div class="bid-display">
+        <span class="bid-amount" id="bidAmount">0</span>
+        <span class="bid-unit">credits</span>
+      </div>
+      <div class="bid-leader" id="bidLeader"></div>
+
+      <div class="turn-flag" id="turnFlag">—</div>
+    </div>
+
+    <div class="panels">
+      <div class="panel blue" id="panelA">
+        <div class="panel-head">
+          <span class="name" id="panelNameA">TEAM BLUE</span>
+          <span class="budget" id="panelBudgetA">500 cr</span>
+        </div>
+        <div class="bid-buttons">
+          <button data-side="A" data-amt="5">+5</button>
+          <button data-side="A" data-amt="10">+10</button>
+          <button data-side="A" data-amt="25">+25</button>
+        </div>
+        <button class="pass-btn" data-side="A" data-pass="1">Pass</button>
+        <div class="panel-note" id="noteA"></div>
+      </div>
+
+      <div class="panel red" id="panelB">
+        <div class="panel-head">
+          <span class="name" id="panelNameB">TEAM RED</span>
+          <span class="budget" id="panelBudgetB">500 cr</span>
+        </div>
+        <div class="bid-buttons">
+          <button data-side="B" data-amt="5">+5</button>
+          <button data-side="B" data-amt="10">+10</button>
+          <button data-side="B" data-amt="25">+25</button>
+        </div>
+        <button class="pass-btn" data-side="B" data-pass="1">Pass</button>
+        <div class="panel-note" id="noteB"></div>
+      </div>
+    </div>
+
+    <div class="next-wrap">
+      <button id="nextBtn">Next Player</button>
+    </div>
+
+    <div class="log-panel">
+      <div class="log-title">AUCTION LOG</div>
+      <div class="log-list" id="logList"></div>
+    </div>
+
+    <div class="squads">
+      <div class="squad-box blue">
+        <h3><span id="squadTitleA">TEAM BLUE</span><span id="squadRatingA">OVR 0</span></h3>
+        <ul class="squad-list" id="squadListA"><li class="squad-empty">No players yet</li></ul>
+      </div>
+      <div class="squad-box red">
+        <h3><span id="squadTitleB">TEAM RED</span><span id="squadRatingB">OVR 0</span></h3>
+        <ul class="squad-list" id="squadListB"><li class="squad-empty">No players yet</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="endScreen">
+    <div class="final-banner" id="finalBanner">—</div>
+    <div class="favorite-tag" id="favoriteTag" style="text-align:center;margin-bottom:26px;"></div>
+    <div class="final-squads">
+      <div class="squad-box blue">
+        <h3><span id="finalNameA">TEAM BLUE</span><span id="finalRatingA">OVR 0</span></h3>
+        <ul class="squad-list" id="finalListA"></ul>
+      </div>
+      <div class="squad-box red">
+        <h3><span id="finalNameB">TEAM RED</span><span id="finalRatingB">OVR 0</span></h3>
+        <ul class="squad-list" id="finalListB"></ul>
+      </div>
+    </div>
+
+    <div class="match-panel">
+      <div class="stage-label">KICK-OFF</div>
+      <div class="match-score">
+        <span class="side-name left" id="matchNameA">TEAM BLUE</span>
+        <span class="score" id="matchScore">0 – 0</span>
+        <span class="side-name right" id="matchNameB">TEAM RED</span>
+      </div>
+      <div class="match-clock" id="matchClock">Not yet played</div>
+      <button id="simulateBtn">Simulate the Match</button>
+      <div class="commentary" id="commentary"></div>
+    </div>
+
+    <button class="btn-secondary" id="playAgainBtn">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  const PLAYER_POOL = [
+    // ICONS
+    {name:"Pelé", pos:"FW", rating:97, base:140, type:"icon"},
+    {name:"Diego Maradona", pos:"FW", rating:96, base:135, type:"icon"},
+    {name:"Zinedine Zidane", pos:"MF", rating:96, base:130, type:"icon"},
+    {name:"Ronaldo Nazário", pos:"FW", rating:95, base:125, type:"icon"},
+    {name:"Johan Cruyff", pos:"FW", rating:95, base:125, type:"icon"},
+    {name:"Paolo Maldini", pos:"DF", rating:95, base:120, type:"icon"},
+    {name:"Franz Beckenbauer", pos:"DF", rating:94, base:120, type:"icon"},
+    {name:"Michel Platini", pos:"MF", rating:92, base:100, type:"icon"},
+    {name:"Ronaldinho", pos:"MF", rating:93, base:110, type:"icon"},
+    {name:"Franco Baresi", pos:"DF", rating:91, base:95, type:"icon"},
+    {name:"Roberto Baggio", pos:"FW", rating:90, base:95, type:"icon"},
+    {name:"Lev Yashin", pos:"GK", rating:90, base:90, type:"icon"},
+    {name:"Garrincha", pos:"FW", rating:90, base:90, type:"icon"},
+    {name:"George Best", pos:"MF", rating:89, base:85, type:"icon"},
+    {name:"Bobby Moore", pos:"DF", rating:88, base:85, type:"icon"},
+    // CURRENT STARS
+    {name:"Kylian Mbappé", pos:"FW", rating:91, base:145, type:"current"},
+    {name:"Erling Haaland", pos:"FW", rating:91, base:140, type:"current"},
+    {name:"Lionel Messi", pos:"FW", rating:90, base:140, type:"current"},
+    {name:"Jude Bellingham", pos:"MF", rating:90, base:120, type:"current"},
+    {name:"Kevin De Bruyne", pos:"MF", rating:90, base:120, type:"current"},
+    {name:"Harry Kane", pos:"FW", rating:90, base:120, type:"current"},
+    {name:"Vinícius Júnior", pos:"FW", rating:89, base:115, type:"current"},
+    {name:"Virgil van Dijk", pos:"DF", rating:89, base:105, type:"current"},
+    {name:"Rodri", pos:"MF", rating:89, base:100, type:"current"},
+    {name:"Thibaut Courtois", pos:"GK", rating:89, base:95, type:"current"},
+    {name:"Alisson Becker", pos:"GK", rating:88, base:90, type:"current"},
+    {name:"Bukayo Saka", pos:"FW", rating:87, base:95, type:"current"},
+  ];
+
+  const SQUAD_TARGET = 11;
+  const STARTING_BUDGET = 500;
+  const MIN_INCREMENT = 5;
+
+  let teams, pool, current, currentBid, highestBidder, passStreak, turn, roundOver;
+
+  const el = id => document.getElementById(id);
+
+  function shuffled(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function initGame(nameA, nameB){
+    teams = {
+      A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[]},
+      B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[]}
+    };
+    pool = shuffled(PLAYER_POOL);
+    turn = "A";
+    el('sbNameA').textContent = teams.A.name.toUpperCase();
+    el('sbNameB').textContent = teams.B.name.toUpperCase();
+    el('panelNameA').textContent = teams.A.name.toUpperCase();
+    el('panelNameB').textContent = teams.B.name.toUpperCase();
+    el('squadTitleA').textContent = teams.A.name.toUpperCase();
+    el('squadTitleB').textContent = teams.B.name.toUpperCase();
+    el('logList').innerHTML = "";
+    startRound();
+  }
+
+  function bothFull(){
+    return teams.A.squad.length >= SQUAD_TARGET && teams.B.squad.length >= SQUAD_TARGET;
+  }
+
+  function canBid(side){
+    const t = teams[side];
+    if(t.squad.length >= SQUAD_TARGET) return false;
+    if(highestBidder === side) return false;
+    return t.budget >= currentBid + MIN_INCREMENT;
+  }
+
+  function startRound(){
+    if(bothFull() || pool.length === 0){
+      return endGame();
+    }
+    current = pool.pop();
+    currentBid = current.base;
+    highestBidder = null;
+    passStreak = 0;
+    roundOver = false;
+    render();
+    afterTurnChange(true);
+  }
+
+  function log(html){
+    const list = el('logList');
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    list.prepend(div);
+  }
+
+  function doBid(side, amt){
+    if(roundOver || turn !== side || !canBid(side)) return;
+    currentBid += amt;
+    highestBidder = side;
+    passStreak = 0;
+    const cls = side === 'A' ? 'b' : 'r';
+    log(`<span class="${cls}">${teams[side].name}</span> bids up to <span class="g">${currentBid}</span> for ${current.name}`);
+    turn = side === 'A' ? 'B' : 'A';
+    render();
+    afterTurnChange();
+  }
+
+  function doPass(side, forced){
+    if(roundOver || turn !== side) return;
+    passStreak++;
+    const cls = side === 'A' ? 'b' : 'r';
+    log(`<span class="${cls}">${teams[side].name}</span> ${forced ? 'sits out (can\'t act)' : 'passes'}`);
+    if(passStreak >= 2){
+      resolveRound();
+      return;
+    }
+    turn = side === 'A' ? 'B' : 'A';
+    render();
+    afterTurnChange();
+  }
+
+  function afterTurnChange(isRoundStart){
+    if(roundOver) return;
+    if(!canBid(turn)){
+      // forced pass, but if this side is already the highest bidder, nothing to do — just flip.
+      if(highestBidder === turn){
+        turn = turn === 'A' ? 'B' : 'A';
+        render();
+        return afterTurnChange();
+      }
+      doPass(turn, true);
+      return;
+    }
+    render();
+  }
+
+  function resolveRound(){
+    roundOver = true;
+    if(highestBidder){
+      const winner = teams[highestBidder];
+      winner.budget -= currentBid;
+      winner.squad.push({...current, price: currentBid});
+      const cls = highestBidder === 'A' ? 'b' : 'r';
+      log(`<span class="${cls}">${winner.name}</span> signs <span class="g">${current.name}</span> for ${currentBid} credits`);
+    } else {
+      log(`${current.name} goes unsold`);
+    }
+    render();
+    el('nextBtn').style.display = 'inline-block';
+  }
+
+  function fmtSquadList(listId, ratingId, squad){
+    const ul = el(listId);
+    ul.innerHTML = "";
+    if(squad.length === 0){
+      ul.innerHTML = '<li class="squad-empty">No players yet</li>';
+    } else {
+      squad.slice().sort((a,b)=>b.rating-a.rating).forEach(p=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="p-name">${p.name}</span><span class="p-info">${p.pos} · ${p.rating} · ${p.price}cr</span>`;
+        ul.appendChild(li);
+      });
+    }
+    const total = squad.reduce((s,p)=>s+p.rating,0);
+    el(ratingId).textContent = `OVR ${total}`;
+  }
+
+  function render(){
+    // scoreboard
+    el('sbBudgetA').textContent = teams.A.budget;
+    el('sbBudgetB').textContent = teams.B.budget;
+    el('sbSquadA').textContent = teams.A.squad.length;
+    el('sbSquadB').textContent = teams.B.squad.length;
+    el('panelBudgetA').textContent = teams.A.budget + ' cr';
+    el('panelBudgetB').textContent = teams.B.budget + ' cr';
+
+    // stage
+    el('playerTag').textContent = current.type === 'icon' ? 'ICON' : 'CURRENT STAR';
+    el('playerTag').className = 'player-tag ' + current.type;
+    el('playerName').textContent = current.name;
+    el('playerPos').textContent = current.pos;
+    el('playerRating').textContent = current.rating;
+    el('bidAmount').textContent = currentBid;
+
+    const leaderEl = el('bidLeader');
+    if(highestBidder){
+      leaderEl.className = 'bid-leader ' + (highestBidder === 'A' ? 'blue-lead' : 'red-lead');
+      leaderEl.innerHTML = `Leading bid: <span class="lb">${teams[highestBidder].name}</span>`;
+    } else {
+      leaderEl.className = 'bid-leader';
+      leaderEl.innerHTML = 'Opening price — no bids yet';
+    }
+
+    const flag = el('turnFlag');
+    if(roundOver){
+      flag.textContent = 'Round complete';
+      flag.className = 'turn-flag';
+    } else {
+      flag.textContent = `${teams[turn].name.toUpperCase()} TO ACT`;
+      flag.className = 'turn-flag ' + (turn === 'A' ? 'blue' : 'red');
+    }
+
+    // panels
+    ['A','B'].forEach(side=>{
+      const panel = el('panel' + side);
+      const isActive = !roundOver && turn === side;
+      panel.className = `panel ${side === 'A' ? 'blue' : 'red'} ${isActive ? 'active' : ''}`;
+      const buttons = panel.querySelectorAll('.bid-buttons button');
+      const passBtn = panel.querySelector('.pass-btn');
+      const enabled = isActive && canBid(side);
+      buttons.forEach(b => b.disabled = !enabled);
+      passBtn.disabled = !isActive;
+      const note = el('note' + side);
+      if(teams[side].squad.length >= SQUAD_TARGET){
+        note.textContent = 'Squad complete (11/11)';
+      } else if(teams[side].budget < currentBid + MIN_INCREMENT && !roundOver){
+        note.textContent = 'Not enough budget to raise';
+      } else {
+        note.textContent = '';
+      }
+    });
+
+    el('nextBtn').style.display = roundOver ? 'inline-block' : 'none';
+
+    fmtSquadList('squadListA', 'squadRatingA', teams.A.squad);
+    fmtSquadList('squadListB', 'squadRatingB', teams.B.squad);
+  }
+
+  function endGame(){
+    el('gameScreen').style.display = 'none';
+    el('endScreen').style.display = 'block';
+
+    const totalA = teams.A.squad.reduce((s,p)=>s+p.rating,0);
+    const totalB = teams.B.squad.reduce((s,p)=>s+p.rating,0);
+
+    el('finalNameA').textContent = teams.A.name.toUpperCase();
+    el('finalNameB').textContent = teams.B.name.toUpperCase();
+
+    let bannerText;
+    if(totalA === totalB){
+      bannerText = "It's a tie — two evenly matched Best XIs";
+    } else {
+      const winnerName = totalA > totalB ? teams.A.name : teams.B.name;
+      bannerText = `${winnerName} builds the stronger Best XI`;
+    }
+    el('finalBanner').textContent = bannerText;
+    el('favoriteTag').textContent = totalA === totalB
+      ? "Squad ratings are dead even — anyone's game on the pitch."
+      : `${totalA > totalB ? teams.A.name : teams.B.name} goes in as favorite on paper — but form is temporary.`;
+
+    fmtSquadList('finalListA', 'finalRatingA', teams.A.squad);
+    fmtSquadList('finalListB', 'finalRatingB', teams.B.squad);
+
+    // reset match panel
+    el('matchNameA').textContent = teams.A.name.toUpperCase();
+    el('matchNameB').textContent = teams.B.name.toUpperCase();
+    el('matchScore').textContent = '0 – 0';
+    el('matchClock').textContent = 'Not yet played';
+    el('simulateBtn').textContent = 'Simulate the Match';
+    el('simulateBtn').disabled = false;
+    const cEl = el('commentary');
+    cEl.classList.remove('show');
+    cEl.innerHTML = '';
+  }
+
+  // ---------- MATCH SIMULATION ----------
+  const CHANCE_FLAVOR = [
+    "goes close but drags it wide",
+    "sees a effort well blocked",
+    "is denied by a brilliant save",
+    "heads narrowly over the bar",
+    "is flagged offside on the break",
+    "fires straight at the keeper",
+    "sees the shot deflected behind for a corner"
+  ];
+  const GOAL_FLAVOR = [
+    "finishes with real composure",
+    "finds the top corner",
+    "slots it home from close range",
+    "curls a beauty into the net",
+    "powers a header past the keeper",
+    "taps in after a scramble in the box"
+  ];
+
+  function weightedPlayer(squad, positions){
+    let pool = squad.filter(p => positions.includes(p.pos));
+    if(pool.length === 0) pool = squad;
+    const total = pool.reduce((s,p)=>s+p.rating,0);
+    let r = Math.random()*total;
+    for(const p of pool){
+      r -= p.rating;
+      if(r <= 0) return p;
+    }
+    return pool[pool.length-1];
+  }
+
+  function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+  function simulateMatch(){
+    const btn = el('simulateBtn');
+    btn.disabled = true;
+
+    const squadA = teams.A.squad.length ? teams.A.squad : [{name:teams.A.name+" XI", pos:"FW", rating:70}];
+    const squadB = teams.B.squad.length ? teams.B.squad : [{name:teams.B.name+" XI", pos:"FW", rating:70}];
+    const strengthA = squadA.reduce((s,p)=>s+p.rating,0) / squadA.length;
+    const strengthB = squadB.reduce((s,p)=>s+p.rating,0) / squadB.length;
+
+    const events = [];
+    let minute = 0;
+    let scoreA = 0, scoreB = 0;
+
+    while(minute < 90){
+      minute += randInt(4, 11);
+      if(minute > 90) minute = 90;
+      if(Math.random() > 0.5){ // a chance falls this interval
+        const shareA = strengthA / (strengthA + strengthB);
+        const side = Math.random() < shareA ? 'A' : 'B';
+        const attackStrength = side === 'A' ? strengthA : strengthB;
+        const defendStrength = side === 'A' ? strengthB : strengthA;
+        let convertProb = 0.30 + (attackStrength - defendStrength) / 250;
+        convertProb = Math.max(0.14, Math.min(0.55, convertProb));
+
+        const squad = side === 'A' ? squadA : squadB;
+        const isGoal = Math.random() < convertProb;
+        const scorer = weightedPlayer(squad, isGoal ? ['FW','MF'] : ['FW','MF','DF']);
+
+        if(isGoal){
+          if(side === 'A') scoreA++; else scoreB++;
+          const flavor = GOAL_FLAVOR[randInt(0, GOAL_FLAVOR.length-1)];
+          events.push({minute, side, goal:true, text:`GOAL! ${scorer.name} ${flavor}. ${scoreA}–${scoreB}`});
+        } else {
+          const flavor = CHANCE_FLAVOR[randInt(0, CHANCE_FLAVOR.length-1)];
+          events.push({minute, side, goal:false, text:`${scorer.name} ${flavor}`});
+        }
+      }
+      if(minute >= 90) break;
+    }
+
+    const cEl = el('commentary');
+    cEl.innerHTML = '';
+    cEl.classList.add('show');
+    el('matchClock').textContent = 'Kick-off';
+    el('matchScore').textContent = '0 – 0';
+
+    let i = 0;
+    function playNext(){
+      if(i >= events.length){
+        el('matchClock').textContent = 'Full time';
+        const resultText = scoreA === scoreB
+          ? `Full time: it finishes level, ${scoreA}–${scoreB}`
+          : `Full time: ${scoreA > scoreB ? teams.A.name : teams.B.name} win it, ${scoreA}–${scoreB}`;
+        const row = document.createElement('div');
+        row.className = 'commentary-row goal';
+        row.innerHTML = `<span class="min">FT</span><span>${resultText}</span>`;
+        cEl.prepend(row);
+        btn.disabled = false;
+        btn.textContent = 'Simulate Again';
+        return;
+      }
+      const ev = events[i];
+      const runningA = events.slice(0,i+1).filter(e=>e.goal && e.side==='A').length;
+      const runningB = events.slice(0,i+1).filter(e=>e.goal && e.side==='B').length;
+      el('matchScore').textContent = `${runningA} – ${runningB}`;
+      el('matchClock').textContent = `${ev.minute}'`;
+      const row = document.createElement('div');
+      row.className = 'commentary-row' + (ev.goal ? ' goal' : '');
+      row.innerHTML = `<span class="min">${ev.minute}'</span><span>${ev.text}</span>`;
+      cEl.prepend(row);
+      i++;
+      setTimeout(playNext, 380);
+    }
+    playNext();
+  }
+
+  function resetToStart(){
+    el('endScreen').style.display = 'none';
+    el('startScreen').style.display = 'block';
+    el('gameScreen').style.display = 'none';
+  }
+
+  // ---- EVENT WIRING ----
+  el('startBtn').addEventListener('click', ()=>{
+    const nameA = el('nameA').value.trim();
+    const nameB = el('nameB').value.trim();
+    el('startScreen').style.display = 'none';
+    el('gameScreen').style.display = 'block';
+    initGame(nameA, nameB);
+  });
+
+  document.querySelectorAll('.bid-buttons button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      doBid(btn.dataset.side, parseInt(btn.dataset.amt,10));
+    });
+  });
+
+  document.querySelectorAll('.pass-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      doPass(btn.dataset.side, false);
+    });
+  });
+
+  el('nextBtn').addEventListener('click', startRound);
+  el('playAgainBtn').addEventListener('click', resetToStart);
+  el('simulateBtn').addEventListener('click', simulateMatch);
+
+})();
+</script>
+</body>
+</html>
