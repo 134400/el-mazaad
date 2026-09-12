@@ -78,17 +78,98 @@
     margin:0 0 30px;
   }
 
-  /* ---------- START SCREEN ---------- */
-  #startScreen{
+  /* ---------- HOME SCREEN ---------- */
+  #homeScreen{max-width:900px; margin:30px auto 0;}
+  .mode-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:16px;
+  }
+  .mode-card{
+    text-align:left;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    border-radius:8px;
+    padding:26px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    transition:border-color .15s ease, transform .12s ease;
+  }
+  .mode-card:hover{border-color:var(--gold); transform:translateY(-3px);}
+  .mode-icon{font-size:30px;}
+  .mode-title{
+    font-family:'Oswald',sans-serif;
+    font-size:19px;
+    font-weight:600;
+    color:var(--chalk);
+  }
+  .mode-desc{
+    font-size:13px;
+    line-height:1.6;
+    color:var(--chalk-dim);
+  }
+
+  /* ---------- SETUP SCREEN ---------- */
+  #setupScreen{
+    display:none;
     max-width:460px;
-    margin:40px auto;
+    margin:30px auto 0;
     background:var(--panel);
     border:1px solid var(--panel-line);
     border-radius:6px;
     padding:32px 28px;
     backdrop-filter: blur(2px);
   }
+  .setup-mode-label{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    color:var(--gold);
+    margin-bottom:18px;
+    text-align:center;
+  }
   .field-row{margin-bottom:18px;}
+
+  .toggle-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin:20px 0 22px;
+    padding-top:16px;
+    border-top:1px solid var(--panel-line);
+  }
+  .switch{
+    position:relative;
+    display:inline-block;
+    width:40px;
+    height:22px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .switch input{opacity:0; width:0; height:0;}
+  .slider{
+    position:absolute;
+    cursor:pointer;
+    inset:0;
+    background:rgba(244,240,228,0.15);
+    border-radius:22px;
+    transition:background .15s ease;
+  }
+  .slider::before{
+    content:"";
+    position:absolute;
+    height:16px; width:16px;
+    left:3px; bottom:3px;
+    background:var(--chalk);
+    border-radius:50%;
+    transition:transform .15s ease;
+  }
+  .switch input:checked + .slider{background:var(--gold);}
+  .switch input:checked + .slider::before{transform:translateX(18px); background:var(--ink);}
+  .toggle-text{display:flex; flex-direction:column; gap:3px;}
+  .toggle-title{font-family:'Oswald',sans-serif; font-size:14px; font-weight:600;}
+  .toggle-desc{font-size:12px; color:var(--chalk-dim); line-height:1.5;}
   .field-row label{
     display:block;
     font-family:'Oswald',sans-serif;
@@ -137,6 +218,8 @@
   }
   .btn-primary:hover{filter:brightness(1.08);}
   .btn-primary:active{transform:scale(0.98);}
+  #setupScreen .btn-primary{margin-bottom:10px;}
+  #backBtn{width:100%;}
 
   /* ---------- SCOREBOARD ---------- */
   #gameScreen{display:none;}
@@ -212,6 +295,81 @@
   }
   .player-meta .rating{color:var(--gold); font-weight:600;}
 
+  /* ---------- PLAYER VISUAL CARDS ---------- */
+  .pcard{
+    width:100%;
+    max-width:190px;
+    margin:0 auto 16px;
+    border-radius:14px;
+    padding:14px 12px 16px;
+    position:relative;
+    text-align:center;
+    border:2px solid var(--gold);
+    background:linear-gradient(160deg, rgba(212,175,55,0.14), rgba(8,23,15,0.55));
+    box-shadow:0 10px 26px rgba(0,0,0,0.35);
+  }
+  .pcard.current{
+    border-color:rgba(120,170,220,0.7);
+    background:linear-gradient(160deg, rgba(111,168,220,0.16), rgba(8,23,15,0.55));
+  }
+  .pcard .pcard-rating{
+    position:absolute; top:10px; left:12px;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:24px; color:var(--gold);
+    line-height:1;
+  }
+  .pcard.current .pcard-rating{color:#9fc7ea;}
+  .pcard .pcard-pos{
+    position:absolute; top:12px; right:12px;
+    font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:1px;
+    padding:3px 8px; border-radius:10px;
+    background:rgba(244,240,228,0.1); color:var(--chalk-dim);
+  }
+  .pcard .pcard-avatar{
+    width:72px; height:72px; border-radius:50%;
+    margin:22px auto 12px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:22px;
+    color:var(--ink);
+    background:radial-gradient(circle at 35% 30%, #f3e6b0, var(--gold) 72%);
+    box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  }
+  .pcard.current .pcard-avatar{
+    background:radial-gradient(circle at 35% 30%, #d7ecfb, #5a95c9 72%);
+  }
+  .pcard .pcard-name{
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; margin-bottom:3px;
+    line-height:1.25;
+  }
+  .pcard .pcard-tag{
+    font-size:9px; letter-spacing:1.2px; color:var(--chalk-dim);
+  }
+  .pcard.masked{border-color:var(--panel-line); background:linear-gradient(160deg, rgba(244,240,228,0.06), rgba(8,23,15,0.55));}
+  .pcard.masked .pcard-avatar{background:radial-gradient(circle at 35% 30%, rgba(244,240,228,0.3), rgba(244,240,228,0.08) 72%); color:var(--chalk-dim);}
+  .pcard.masked .pcard-name{color:var(--gold);}
+
+  .pcard-mini{
+    border:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    padding:0 !important;
+    max-width:none;
+    margin:0;
+  }
+  .pcard-mini .pcard-rating{position:static; display:inline-block; font-size:15px; margin-right:6px;}
+  .pcard-mini .pcard-pos{position:static; display:inline-block; margin-left:0; padding:2px 6px; font-size:9px;}
+  .pcard-mini .pcard-avatar{width:40px; height:40px; font-size:14px; margin:8px auto 6px; box-shadow:none;}
+  .pcard-mini .pcard-name{font-size:13px;}
+  .pcard-mini .pcard-tag{display:none;}
+  .pcard-mini .pcard-toprow{display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:2px;}
+
+  .mini-avatar{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:20px; height:20px; border-radius:50%;
+    background:var(--gold); color:var(--ink);
+    font-family:'Oswald',sans-serif; font-size:9px; font-weight:700;
+    margin-right:6px; vertical-align:middle; flex-shrink:0;
+  }
+
   .bid-display{
     display:flex;
     justify-content:center;
@@ -245,7 +403,49 @@
   .turn-flag.blue{background:var(--blue-dim); color:var(--blue);}
   .turn-flag.red{background:var(--red-dim); color:var(--red);}
 
-  /* ---------- BID PANELS ---------- */
+  /* ---------- DRAFT SCREEN (Quick Match) ---------- */
+  #draftScreen{display:none;}
+  .draft-actions{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .draft-actions button{
+    padding:10px 20px;
+    font-size:13px;
+    border-radius:4px;
+    background:transparent;
+    border:1px solid var(--panel-line) !important;
+    color:var(--chalk-dim);
+  }
+  .draft-actions button:hover{color:var(--gold); border-color:var(--gold) !important;}
+  .draft-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(130px,1fr));
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .draft-card{
+    text-align:center;
+    padding:12px 10px;
+    border-radius:8px;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    color:var(--chalk);
+    transition:border-color .12s ease, transform .1s ease;
+  }
+  .draft-card:hover:not(:disabled){transform:translateY(-2px);}
+  .draft-card:disabled{opacity:0.3; cursor:not-allowed;}
+  .draft-card.turn-blue:hover:not(:disabled){border-color:var(--blue);}
+  .draft-card.turn-red:hover:not(:disabled){border-color:var(--red);}
+  .draft-empty{
+    text-align:center;
+    color:var(--chalk-dim);
+    font-size:13px;
+    padding:20px;
+    grid-column:1/-1;
+  }
   .panels{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -303,6 +503,66 @@
   .pass-btn:disabled{opacity:0.3; cursor:not-allowed;}
 
   .panel-note{font-size:11px; color:var(--chalk-dim); margin-top:8px; min-height:14px;}
+
+  /* ---------- MYSTERY POWER CARDS ---------- */
+  .cards-row{display:flex; gap:6px; margin-bottom:10px;}
+  .card-btn{
+    flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:7px 2px;
+    font-size:10px;
+    border-radius:4px;
+    background:rgba(212,175,55,0.08);
+    border:1px solid rgba(212,175,55,0.35) !important;
+    color:var(--gold);
+  }
+  .card-btn .card-icon{font-size:16px;}
+  .card-btn .card-name{font-family:'Oswald',sans-serif; letter-spacing:0.2px; text-align:center;}
+  .card-btn:disabled{opacity:0.25; cursor:not-allowed;}
+  .card-btn:hover:not(:disabled){background:rgba(212,175,55,0.18);}
+
+  .steal-picker{
+    margin-top:10px;
+    padding:10px;
+    border:1px solid var(--panel-line);
+    border-radius:4px;
+    background:rgba(0,0,0,0.2);
+  }
+  .steal-title{font-size:11px; color:var(--chalk-dim); margin-bottom:6px;}
+  .steal-option{
+    display:block; width:100%;
+    text-align:left;
+    padding:7px 8px;
+    margin-bottom:5px;
+    font-size:12px;
+    border-radius:4px;
+    background:rgba(244,240,228,0.06);
+    color:var(--chalk);
+  }
+  .steal-option:hover{background:rgba(212,175,55,0.15); color:var(--gold);}
+  .steal-cancel{
+    width:100%;
+    padding:6px;
+    font-size:11px;
+    background:transparent;
+    border:1px solid var(--panel-line) !important;
+    color:var(--chalk-dim);
+  }
+
+  /* ---------- BLIND AUCTION SCREEN ---------- */
+  #blindScreen{display:none;}
+  .blind-input{
+    width:100%;
+    padding:11px 12px;
+    background:rgba(244,240,228,0.06);
+    border:1px solid var(--panel-line);
+    border-radius:4px;
+    color:var(--chalk);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    text-align:center;
+  }
+  .blind-input:focus{outline:1px solid var(--gold);}
 
   /* ---------- NEXT / LOG ---------- */
   .next-wrap{text-align:center; margin-bottom:22px; min-height:50px;}
@@ -467,12 +727,13 @@
     .final-squads{grid-template-columns:1fr;}
     .match-score{grid-template-columns:1fr; gap:2px;}
     .match-score .side-name.left, .match-score .side-name.right{text-align:center;}
+    .mode-grid{grid-template-columns:1fr;}
   }
 
   @media (max-width:420px){
     body{padding:20px 10px 48px;}
     .stage{padding:20px 14px;}
-    #startScreen{padding:24px 18px;}
+    #setupScreen{padding:24px 18px;}
     .bid-buttons{gap:6px;}
     .bid-buttons button{padding:10px 2px; font-size:13px;}
     .panel{padding:14px;}
@@ -487,20 +748,64 @@
   <h1 class="masthead">BEST <span>XI</span> AUCTION</h1>
   <p class="sub">Build your ultimate football club — legends and current stars, one bid at a time.</p>
 
-  <!-- START SCREEN -->
-  <div id="startScreen">
+  <!-- HOME SCREEN -->
+  <div id="homeScreen">
+    <div class="mode-grid">
+      <button class="mode-card" data-mode="auction">
+        <span class="mode-icon">🏆</span>
+        <span class="mode-title">Auction Mode</span>
+        <span class="mode-desc">1,200 credit budget each. Bid on players one at a time, outlast your rival, build the strongest XI.</span>
+      </button>
+      <button class="mode-card" data-mode="quick">
+        <span class="mode-icon">⚡</span>
+        <span class="mode-title">Quick Match — 11 v 11</span>
+        <span class="mode-desc">No budget, no bidding. Take turns picking players straight onto your squad and get to kickoff fast.</span>
+      </button>
+      <button class="mode-card" data-mode="blind">
+        <span class="mode-icon">🙈</span>
+        <span class="mode-title">Blind Auction</span>
+        <span class="mode-desc">Sealed bids — you only ever see your own cash. Submit a secret bid each round, then reveal together.</span>
+      </button>
+      <button class="mode-card" data-mode="duo">
+        <span class="mode-icon">👥</span>
+        <span class="mode-title">Duo Auction — 2v2</span>
+        <span class="mode-desc">Two managers per side, sharing one budget and squad. The spotlight teammate alternates each round.</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div id="setupScreen">
+    <div class="setup-mode-label" id="setupModeLabel">AUCTION MODE</div>
     <div class="field-row blue">
-      <label>MANAGER ONE — TEAM NAME</label>
+      <label id="labelA">MANAGER ONE — TEAM NAME</label>
       <input type="text" id="nameA" placeholder="Team Blue" maxlength="18">
     </div>
+    <div class="field-row blue" id="nameA2Row" style="display:none;">
+      <label>TEAM BLUE — PLAYER 2</label>
+      <input type="text" id="nameA2" placeholder="Teammate" maxlength="18">
+    </div>
     <div class="field-row red">
-      <label>MANAGER TWO — TEAM NAME</label>
+      <label id="labelB">MANAGER TWO — TEAM NAME</label>
       <input type="text" id="nameB" placeholder="Team Red" maxlength="18">
     </div>
-    <div class="rules">
-      Each manager starts with a <b>500 credit</b> budget. Players — a mix of <b>Icons</b> and <b>current stars</b> — go up for auction one at a time. On your turn, raise the bid or pass. When both sides pass in a row, the highest bidder wins the player. Build a squad of <b>11</b> before the pool runs dry — highest total rating wins.
+    <div class="field-row red" id="nameB2Row" style="display:none;">
+      <label>TEAM RED — PLAYER 2</label>
+      <input type="text" id="nameB2" placeholder="Teammate" maxlength="18">
     </div>
-    <button class="btn-primary" id="startBtn">Start the Auction</button>
+    <div class="rules" id="setupRules"></div>
+    <div class="toggle-row" id="mysteryRow">
+      <label class="switch">
+        <input type="checkbox" id="mysteryToggle">
+        <span class="slider"></span>
+      </label>
+      <div class="toggle-text">
+        <span class="toggle-title">Mystery Player Mode</span>
+        <span class="toggle-desc">Hide each player's name during bidding — it's only revealed once the round is won.</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="beginBtn">Begin</button>
+    <button class="btn-secondary" id="backBtn">Back to Game Modes</button>
   </div>
 
   <!-- GAME SCREEN -->
@@ -520,9 +825,7 @@
 
     <div class="stage">
       <div class="stage-label">NOW UP FOR AUCTION</div>
-      <span class="player-tag" id="playerTag">ICON</span>
-      <h2 class="player-name" id="playerName">—</h2>
-      <div class="player-meta">Position <b id="playerPos">—</b> &nbsp;·&nbsp; Rating <span class="rating" id="playerRating">—</span></div>
+      <div id="playerCardSlot"></div>
 
       <div class="bid-display">
         <span class="bid-amount" id="bidAmount">0</span>
@@ -539,10 +842,11 @@
           <span class="name" id="panelNameA">TEAM BLUE</span>
           <span class="budget" id="panelBudgetA">500 cr</span>
         </div>
+        <div class="cards-row" id="cardsA"></div>
         <div class="bid-buttons">
-          <button data-side="A" data-amt="5">+5</button>
           <button data-side="A" data-amt="10">+10</button>
           <button data-side="A" data-amt="25">+25</button>
+          <button data-side="A" data-amt="50">+50</button>
         </div>
         <button class="pass-btn" data-side="A" data-pass="1">Pass</button>
         <div class="panel-note" id="noteA"></div>
@@ -553,10 +857,11 @@
           <span class="name" id="panelNameB">TEAM RED</span>
           <span class="budget" id="panelBudgetB">500 cr</span>
         </div>
+        <div class="cards-row" id="cardsB"></div>
         <div class="bid-buttons">
-          <button data-side="B" data-amt="5">+5</button>
           <button data-side="B" data-amt="10">+10</button>
           <button data-side="B" data-amt="25">+25</button>
+          <button data-side="B" data-amt="50">+50</button>
         </div>
         <button class="pass-btn" data-side="B" data-pass="1">Pass</button>
         <div class="panel-note" id="noteB"></div>
@@ -582,6 +887,45 @@
         <ul class="squad-list" id="squadListB"><li class="squad-empty">No players yet</li></ul>
       </div>
     </div>
+  </div>
+
+  <!-- DRAFT SCREEN (Quick Match) -->
+  <div id="draftScreen">
+    <div class="scoreboard">
+      <div class="score-side blue">
+        <span class="team-name" id="draftNameA">TEAM BLUE</span>
+        <span class="team-stat">Squad: <b id="draftCountA">0</b>/11</span>
+      </div>
+      <span class="vs">VS</span>
+      <div class="score-side red right">
+        <span class="team-name" id="draftNameB">TEAM RED</span>
+        <span class="team-stat">Squad: <b id="draftCountB">0</b>/11</span>
+      </div>
+    </div>
+
+    <div class="turn-flag" id="draftTurnFlag" style="text-align:center;margin-bottom:18px;">—</div>
+
+    <div class="draft-actions">
+      <button id="autoDraftBtn">Auto-Draft Both Teams</button>
+    </div>
+
+    <div class="draft-grid" id="draftGrid"></div>
+  </div>
+
+  <!-- BLIND AUCTION SCREEN -->
+  <div id="blindScreen">
+    <div class="scoreboard">
+      <div class="score-side blue">
+        <span class="team-name" id="blindNameA">TEAM BLUE</span>
+        <span class="team-stat">Squad: <b id="blindCountA">0</b>/11</span>
+      </div>
+      <span class="vs">VS</span>
+      <div class="score-side red right">
+        <span class="team-name" id="blindNameB">TEAM RED</span>
+        <span class="team-stat">Squad: <b id="blindCountB">0</b>/11</span>
+      </div>
+    </div>
+    <div class="stage" id="blindStage"></div>
   </div>
 
   <!-- END SCREEN -->
@@ -652,10 +996,27 @@
   ];
 
   const SQUAD_TARGET = 11;
-  const STARTING_BUDGET = 500;
-  const MIN_INCREMENT = 5;
+  const STARTING_BUDGET = 1200;
+  const MIN_INCREMENT = 10;
 
-  let teams, pool, current, currentBid, highestBidder, passStreak, turn, roundOver;
+  const CARD_DEFS = {
+    bonus:    {name:"Bonus Budget", icon:"💰", desc:"+120 credits, instantly.", modes:['auction','blind']},
+    discount: {name:"Discount",     icon:"🏷️", desc:"Your next signing costs 20% less.", modes:['auction','blind']},
+    skip:     {name:"Skip Rival",   icon:"⏭️", desc:"Force your rival to sit out their next turn this round.", modes:['auction']},
+    steal:    {name:"Player Swap",  icon:"🔄", desc:"Take a player from your rival's squad — they're refunded what they paid.", modes:['auction']}
+  };
+
+  function randomCardKey(mode){
+    const keys = Object.keys(CARD_DEFS).filter(k => CARD_DEFS[k].modes.includes(mode));
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+
+  function freshCards(mode){
+    return [{key:randomCardKey(mode), used:false}, {key:randomCardKey(mode), used:false}];
+  }
+
+  let teams, pool, current, currentBid, highestBidder, passStreak, turn, roundOver, mysteryMode, duoRoundIndex;
+  let blindStep, blindBidA, blindBidB, pendingNextEntrySide;
 
   const el = id => document.getElementById(id);
 
@@ -668,13 +1029,53 @@
     return a;
   }
 
-  function initGame(nameA, nameB){
+  function initials(name){
+    const clean = name.replace(/[^\p{L}\s]/gu, '').trim();
+    const parts = clean.split(/\s+/);
+    if(parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function playerCardHTML(p, opts){
+    opts = opts || {};
+    const masked = !!opts.masked;
+    const mini = !!opts.mini;
+    const typeClass = p.type === 'icon' ? '' : 'current';
+    const name = masked ? 'Mystery Player' : p.name;
+    const avatarTxt = masked ? '❓' : initials(p.name);
+    const ratingTxt = masked ? '??' : p.rating;
+    const tagTxt = p.type === 'icon' ? 'ICON' : 'CURRENT STAR';
+
+    if(mini){
+      return `
+        <div class="pcard pcard-mini ${typeClass} ${masked ? 'masked' : ''}">
+          <div class="pcard-avatar">${avatarTxt}</div>
+          <div class="pcard-toprow">
+            <span class="pcard-rating">${ratingTxt}</span>
+            <span class="pcard-pos">${p.pos}</span>
+          </div>
+          <div class="pcard-name">${name}</div>
+        </div>`;
+    }
+    return `
+      <div class="pcard ${typeClass} ${masked ? 'masked' : ''}">
+        <span class="pcard-rating">${ratingTxt}</span>
+        <span class="pcard-pos">${p.pos}</span>
+        <div class="pcard-avatar">${avatarTxt}</div>
+        <div class="pcard-name">${name}</div>
+        <div class="pcard-tag">${tagTxt}</div>
+      </div>`;
+  }
+
+  function initGame(nameA, nameB, mystery, playersA, playersB){
     teams = {
-      A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[]},
-      B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[]}
+      A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[], cards:freshCards('auction'), discountActive:false, forcedSkip:false, players:playersA || null},
+      B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[], cards:freshCards('auction'), discountActive:false, forcedSkip:false, players:playersB || null}
     };
     pool = shuffled(PLAYER_POOL);
     turn = "A";
+    mysteryMode = !!mystery;
+    duoRoundIndex = -1;
     el('sbNameA').textContent = teams.A.name.toUpperCase();
     el('sbNameB').textContent = teams.B.name.toUpperCase();
     el('panelNameA').textContent = teams.A.name.toUpperCase();
@@ -689,6 +1090,242 @@
     return teams.A.squad.length >= SQUAD_TARGET && teams.B.squad.length >= SQUAD_TARGET;
   }
 
+  // ---------- QUICK MATCH (11 v 11 DRAFT) ----------
+  function initQuickMatch(nameA, nameB){
+    teams = {
+      A: {name:nameA || "Team Blue", budget:0, squad:[]},
+      B: {name:nameB || "Team Red", budget:0, squad:[]}
+    };
+    pool = shuffled(PLAYER_POOL);
+    turn = "A";
+    el('draftNameA').textContent = teams.A.name.toUpperCase();
+    el('draftNameB').textContent = teams.B.name.toUpperCase();
+    renderDraft();
+  }
+
+  function advanceDraftTurn(){
+    turn = turn === 'A' ? 'B' : 'A';
+    if(teams[turn].squad.length >= SQUAD_TARGET){
+      turn = turn === 'A' ? 'B' : 'A';
+    }
+  }
+
+  function pickDraftPlayer(idx){
+    if(teams[turn].squad.length >= SQUAD_TARGET) return;
+    const player = pool.splice(idx, 1)[0];
+    teams[turn].squad.push({...player, price:null});
+    if(bothFull() || pool.length === 0){
+      return endGame();
+    }
+    advanceDraftTurn();
+    renderDraft();
+  }
+
+  function autoDraftRest(){
+    while(pool.length > 0 && !bothFull()){
+      if(teams[turn].squad.length >= SQUAD_TARGET){
+        advanceDraftTurn();
+        continue;
+      }
+      const idx = Math.floor(Math.random() * pool.length);
+      const player = pool.splice(idx, 1)[0];
+      teams[turn].squad.push({...player, price:null});
+      if(bothFull() || pool.length === 0) break;
+      advanceDraftTurn();
+    }
+    endGame();
+  }
+
+  function renderDraft(){
+    el('draftCountA').textContent = teams.A.squad.length;
+    el('draftCountB').textContent = teams.B.squad.length;
+
+    const flag = el('draftTurnFlag');
+    flag.textContent = `${teams[turn].name.toUpperCase()} — PICK A PLAYER`;
+    flag.className = 'turn-flag ' + (turn === 'A' ? 'blue' : 'red');
+
+    const grid = el('draftGrid');
+    grid.innerHTML = '';
+    if(pool.length === 0){
+      grid.innerHTML = '<div class="draft-empty">No players left in the pool</div>';
+      return;
+    }
+    pool.forEach((p, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'draft-card ' + (turn === 'A' ? 'turn-blue' : 'turn-red');
+      btn.innerHTML = playerCardHTML(p, {mini:true});
+      btn.addEventListener('click', ()=> pickDraftPlayer(idx));
+      grid.appendChild(btn);
+    });
+  }
+
+  // ---------- BLIND AUCTION (SEALED BID MODE) ----------
+  function initBlindMode(nameA, nameB){
+    teams = {
+      A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[], cards:freshCards('blind'), discountActive:false},
+      B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[], cards:freshCards('blind'), discountActive:false}
+    };
+    pool = shuffled(PLAYER_POOL);
+    el('blindNameA').textContent = teams.A.name.toUpperCase();
+    el('blindNameB').textContent = teams.B.name.toUpperCase();
+    startBlindRound();
+  }
+
+  function startBlindRound(){
+    if(bothFull() || pool.length === 0) return endGame();
+    current = pool.pop();
+    blindBidA = teams.A.squad.length >= SQUAD_TARGET ? 0 : null;
+    blindBidB = teams.B.squad.length >= SQUAD_TARGET ? 0 : null;
+    blindStep = 'reveal-player';
+    el('blindCountA').textContent = teams.A.squad.length;
+    el('blindCountB').textContent = teams.B.squad.length;
+    renderBlind();
+  }
+
+  function renderBlind(){
+    if(blindStep === 'reveal-player') return renderBlindReveal();
+    if(blindStep === 'entryA') return renderBlindEntry('A');
+    if(blindStep === 'entryB') return renderBlindEntry('B');
+    if(blindStep === 'pass-device') return renderBlindPassDevice();
+    if(blindStep === 'result') return renderBlindResult();
+  }
+
+  function renderBlindReveal(){
+    const stage = el('blindStage');
+    stage.innerHTML = `
+      <div class="stage-label">SEALED BIDDING</div>
+      ${playerCardHTML(current)}
+      <p style="font-size:12px;color:var(--chalk-dim);margin:-6px 0 14px;">Base price: ${current.base}cr</p>
+      <button class="btn-primary" id="beginBidBtn" style="max-width:260px;margin:0 auto;">Begin Sealed Bidding</button>
+    `;
+    el('beginBidBtn').addEventListener('click', ()=>{
+      blindStep = blindBidA === null ? 'entryA' : (blindBidB === null ? 'entryB' : 'result');
+      renderBlind();
+    });
+  }
+
+  function renderBlindEntry(side, presetValue){
+    const stage = el('blindStage');
+    const t = teams[side];
+    stage.innerHTML = `
+      <div class="stage-label">${t.name.toUpperCase()} — PRIVATE BID</div>
+      <p style="font-size:12px;color:var(--chalk-dim);margin-bottom:14px;">Your budget: <b style="color:var(--chalk)">${t.budget}cr</b> &nbsp;·&nbsp; Squad: ${t.squad.length}/11 &nbsp;·&nbsp; Base price: ${current.base}cr</p>
+      <div class="cards-row" id="blindCards${side}" style="max-width:280px;margin:0 auto 16px;"></div>
+      <div style="max-width:220px;margin:0 auto;">
+        <input type="number" id="blindBidInput" class="blind-input" min="0" max="${t.budget}" placeholder="Enter secret bid" value="${presetValue || ''}">
+      </div>
+      <button class="btn-primary" id="lockBidBtn" style="max-width:220px;margin:14px auto 0;">Lock In Bid</button>
+      <p style="font-size:11px;color:var(--chalk-dim);margin-top:8px;">0 = no interest in this player</p>
+    `;
+    renderBlindCards(side);
+    el('lockBidBtn').addEventListener('click', ()=>{
+      const input = el('blindBidInput');
+      let val = parseInt(input.value, 10);
+      if(isNaN(val) || val < 0) val = 0;
+      if(val > t.budget) val = t.budget;
+      if(side === 'A') blindBidA = val; else blindBidB = val;
+
+      const otherSide = side === 'A' ? 'B' : 'A';
+      const otherVal = otherSide === 'A' ? blindBidA : blindBidB;
+      if(otherVal === null){
+        pendingNextEntrySide = otherSide;
+        blindStep = 'pass-device';
+      } else {
+        blindStep = 'result';
+      }
+      renderBlind();
+    });
+  }
+
+  function renderBlindCards(side){
+    const container = el('blindCards' + side);
+    if(!container) return;
+    container.innerHTML = '';
+    teams[side].cards.forEach((card, idx)=>{
+      const def = CARD_DEFS[card.key];
+      const btn = document.createElement('button');
+      btn.className = 'card-btn';
+      btn.title = def.desc;
+      btn.innerHTML = `<span class="card-icon">${def.icon}</span><span class="card-name">${def.name}</span>`;
+      const applicable = card.key === 'discount' ? !teams[side].discountActive : true;
+      btn.disabled = card.used || !applicable;
+      btn.addEventListener('click', ()=> playBlindCard(side, idx));
+      container.appendChild(btn);
+    });
+  }
+
+  function playBlindCard(side, idx){
+    const card = teams[side].cards[idx];
+    if(!card || card.used) return;
+    const inputEl = el('blindBidInput');
+    const preserved = inputEl ? inputEl.value : '';
+    if(card.key === 'bonus'){
+      teams[side].budget += 120;
+      card.used = true;
+    } else if(card.key === 'discount'){
+      teams[side].discountActive = true;
+      card.used = true;
+    }
+    renderBlindEntry(side, preserved);
+  }
+
+  function renderBlindPassDevice(){
+    const stage = el('blindStage');
+    const nextSide = pendingNextEntrySide;
+    stage.innerHTML = `
+      <div class="stage-label">PRIVACY CHECK</div>
+      <p style="font-size:14px;color:var(--chalk-dim);margin:10px 0 20px;">Pass the device to <b style="color:var(--chalk)">${teams[nextSide].name}</b>. Don't peek at their bid!</p>
+      <button class="btn-primary" id="readyBtn" style="max-width:260px;margin:0 auto;">I'm ${teams[nextSide].name} — Ready</button>
+    `;
+    el('readyBtn').addEventListener('click', ()=>{
+      blindStep = nextSide === 'A' ? 'entryA' : 'entryB';
+      renderBlind();
+    });
+  }
+
+  function renderBlindResult(){
+    const stage = el('blindStage');
+    let winner = null, price = 0;
+    if(blindBidA > 0 || blindBidB > 0){
+      if(blindBidA === blindBidB){
+        winner = Math.random() < 0.5 ? 'A' : 'B';
+      } else {
+        winner = blindBidA > blindBidB ? 'A' : 'B';
+      }
+      price = winner === 'A' ? blindBidA : blindBidB;
+    }
+
+    let discountUsed = false;
+    if(winner && teams[winner].discountActive){
+      price = Math.round(price * 0.8);
+      teams[winner].discountActive = false;
+      discountUsed = true;
+    }
+
+    let html = `
+      <div class="stage-label">BIDS REVEALED</div>
+      <div style="display:flex;justify-content:center;gap:40px;margin:14px 0 18px;">
+        <div><span style="color:var(--blue);font-family:'Oswald',sans-serif;font-size:13px;">${teams.A.name}</span><br><span style="font-size:24px;font-family:'Oswald',sans-serif;font-weight:700;">${blindBidA}cr</span></div>
+        <div><span style="color:var(--red);font-family:'Oswald',sans-serif;font-size:13px;">${teams.B.name}</span><br><span style="font-size:24px;font-family:'Oswald',sans-serif;font-weight:700;">${blindBidB}cr</span></div>
+      </div>
+    `;
+
+    if(winner){
+      teams[winner].budget -= price;
+      teams[winner].squad.push({...current, price});
+      html += `<p style="font-size:14px;"><b style="color:var(--gold);">${teams[winner].name}</b> wins ${current.name} for ${price}cr${discountUsed ? ' (Discount applied!)' : ''}</p>`;
+    } else {
+      html += `<p style="font-size:14px;color:var(--chalk-dim);">Both sides passed — ${current.name} goes unsold.</p>`;
+    }
+
+    html += `<button class="btn-primary" id="blindNextBtn" style="max-width:220px;margin:16px auto 0;">Next Player</button>`;
+    stage.innerHTML = html;
+    el('blindNextBtn').addEventListener('click', startBlindRound);
+
+    el('blindCountA').textContent = teams.A.squad.length;
+    el('blindCountB').textContent = teams.B.squad.length;
+  }
+
   function canBid(side){
     const t = teams[side];
     if(t.squad.length >= SQUAD_TARGET) return false;
@@ -696,10 +1333,81 @@
     return t.budget >= currentBid + MIN_INCREMENT;
   }
 
+  // ---------- POWER CARDS (Auction Mode) ----------
+  function cardApplicable(side, key){
+    const rival = side === 'A' ? 'B' : 'A';
+    if(key === 'discount') return !teams[side].discountActive;
+    if(key === 'skip') return !teams[rival].forcedSkip;
+    if(key === 'steal') return teams[rival].squad.length > 0 && teams[side].squad.length < SQUAD_TARGET;
+    return true;
+  }
+
+  function playCard(side, idx){
+    if(roundOver || turn !== side) return;
+    const card = teams[side].cards[idx];
+    if(!card || card.used || !cardApplicable(side, card.key)) return;
+    const cls = side === 'A' ? 'b' : 'r';
+    const rival = side === 'A' ? 'B' : 'A';
+
+    if(card.key === 'bonus'){
+      teams[side].budget += 120;
+      card.used = true;
+      log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Bonus Budget</span> — +120 credits!`);
+      render();
+    } else if(card.key === 'discount'){
+      teams[side].discountActive = true;
+      card.used = true;
+      log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Discount</span> — next signing is 20% cheaper.`);
+      render();
+    } else if(card.key === 'skip'){
+      teams[rival].forcedSkip = true;
+      card.used = true;
+      log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Skip Rival</span> — ${teams[rival].name} will sit out their next turn.`);
+      render();
+    } else if(card.key === 'steal'){
+      showStealPicker(side, idx);
+    }
+  }
+
+  function showStealPicker(side, idx){
+    const rival = side === 'A' ? 'B' : 'A';
+    const panel = el('panel' + side);
+    let picker = panel.querySelector('.steal-picker');
+    if(picker) picker.remove();
+    picker = document.createElement('div');
+    picker.className = 'steal-picker';
+    picker.innerHTML = `<div class="steal-title">Choose a player to take from ${teams[rival].name}:</div>`;
+    teams[rival].squad.forEach((p, pIdx)=>{
+      const b = document.createElement('button');
+      b.className = 'steal-option';
+      b.textContent = `${p.name} — ${p.pos} · ${p.rating}`;
+      b.addEventListener('click', ()=> executeSteal(side, idx, pIdx));
+      picker.appendChild(b);
+    });
+    const cancel = document.createElement('button');
+    cancel.className = 'steal-cancel';
+    cancel.textContent = 'Cancel';
+    cancel.addEventListener('click', ()=> picker.remove());
+    picker.appendChild(cancel);
+    panel.appendChild(picker);
+  }
+
+  function executeSteal(side, idx, rivalPlayerIdx){
+    const rival = side === 'A' ? 'B' : 'A';
+    const [stolen] = teams[rival].squad.splice(rivalPlayerIdx, 1);
+    if(stolen.price){ teams[rival].budget += stolen.price; }
+    teams[side].squad.push({...stolen, price: stolen.price ?? null});
+    teams[side].cards[idx].used = true;
+    const cls = side === 'A' ? 'b' : 'r';
+    log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Player Swap</span> — takes ${stolen.name} from ${teams[rival].name}${stolen.price ? ` (they're refunded ${stolen.price}cr)` : ''}`);
+    render();
+  }
+
   function startRound(){
     if(bothFull() || pool.length === 0){
       return endGame();
     }
+    duoRoundIndex++;
     current = pool.pop();
     currentBid = current.base;
     highestBidder = null;
@@ -722,7 +1430,8 @@
     highestBidder = side;
     passStreak = 0;
     const cls = side === 'A' ? 'b' : 'r';
-    log(`<span class="${cls}">${teams[side].name}</span> bids up to <span class="g">${currentBid}</span> for ${current.name}`);
+    const nameForLog = (mysteryMode) ? 'the Mystery Player' : current.name;
+    log(`<span class="${cls}">${teams[side].name}</span> bids up to <span class="g">${currentBid}</span> for ${nameForLog}`);
     turn = side === 'A' ? 'B' : 'A';
     render();
     afterTurnChange();
@@ -732,7 +1441,8 @@
     if(roundOver || turn !== side) return;
     passStreak++;
     const cls = side === 'A' ? 'b' : 'r';
-    log(`<span class="${cls}">${teams[side].name}</span> ${forced ? 'sits out (can\'t act)' : 'passes'}`);
+    const msg = forced === 'card' ? "sits out — a Skip Rival card was played" : forced ? "sits out (can't act)" : "passes";
+    log(`<span class="${cls}">${teams[side].name}</span> ${msg}`);
     if(passStreak >= 2){
       resolveRound();
       return;
@@ -744,6 +1454,11 @@
 
   function afterTurnChange(isRoundStart){
     if(roundOver) return;
+    if(teams[turn].forcedSkip){
+      teams[turn].forcedSkip = false;
+      doPass(turn, 'card');
+      return;
+    }
     if(!canBid(turn)){
       // forced pass, but if this side is already the highest bidder, nothing to do — just flip.
       if(highestBidder === turn){
@@ -761,10 +1476,17 @@
     roundOver = true;
     if(highestBidder){
       const winner = teams[highestBidder];
-      winner.budget -= currentBid;
-      winner.squad.push({...current, price: currentBid});
+      let finalPrice = currentBid;
+      let discountUsed = false;
+      if(winner.discountActive){
+        finalPrice = Math.round(currentBid * 0.8);
+        winner.discountActive = false;
+        discountUsed = true;
+      }
+      winner.budget -= finalPrice;
+      winner.squad.push({...current, price: finalPrice});
       const cls = highestBidder === 'A' ? 'b' : 'r';
-      log(`<span class="${cls}">${winner.name}</span> signs <span class="g">${current.name}</span> for ${currentBid} credits`);
+      log(`<span class="${cls}">${winner.name}</span> signs <span class="g">${current.name}</span> for ${finalPrice} credits${discountUsed ? ' (Discount applied!)' : ''}`);
     } else {
       log(`${current.name} goes unsold`);
     }
@@ -780,7 +1502,8 @@
     } else {
       squad.slice().sort((a,b)=>b.rating-a.rating).forEach(p=>{
         const li = document.createElement('li');
-        li.innerHTML = `<span class="p-name">${p.name}</span><span class="p-info">${p.pos} · ${p.rating} · ${p.price}cr</span>`;
+        const priceTxt = (p.price === null || p.price === undefined) ? 'Drafted' : `${p.price}cr`;
+        li.innerHTML = `<span class="p-name"><span class="mini-avatar">${initials(p.name)}</span>${p.name}</span><span class="p-info">${p.pos} · ${p.rating} · ${priceTxt}</span>`;
         ul.appendChild(li);
       });
     }
@@ -798,11 +1521,8 @@
     el('panelBudgetB').textContent = teams.B.budget + ' cr';
 
     // stage
-    el('playerTag').textContent = current.type === 'icon' ? 'ICON' : 'CURRENT STAR';
-    el('playerTag').className = 'player-tag ' + current.type;
-    el('playerName').textContent = current.name;
-    el('playerPos').textContent = current.pos;
-    el('playerRating').textContent = current.rating;
+    const isHidden = mysteryMode && !roundOver;
+    el('playerCardSlot').innerHTML = playerCardHTML(current, {masked:isHidden});
     el('bidAmount').textContent = currentBid;
 
     const leaderEl = el('bidLeader');
@@ -819,7 +1539,11 @@
       flag.textContent = 'Round complete';
       flag.className = 'turn-flag';
     } else {
-      flag.textContent = `${teams[turn].name.toUpperCase()} TO ACT`;
+      const side = teams[turn];
+      const label = side.players
+        ? `${side.players[Math.abs(duoRoundIndex) % 2].toUpperCase()} (${side.name.toUpperCase()}) TO ACT`
+        : `${side.name.toUpperCase()} TO ACT`;
+      flag.textContent = label;
       flag.className = 'turn-flag ' + (turn === 'A' ? 'blue' : 'red');
     }
 
@@ -841,6 +1565,21 @@
       } else {
         note.textContent = '';
       }
+
+      const oldPicker = panel.querySelector('.steal-picker');
+      if(oldPicker) oldPicker.remove();
+      const cardsRow = el('cards' + side);
+      cardsRow.innerHTML = '';
+      teams[side].cards.forEach((card, idx)=>{
+        const def = CARD_DEFS[card.key];
+        const btn = document.createElement('button');
+        btn.className = 'card-btn';
+        btn.title = def.desc;
+        btn.innerHTML = `<span class="card-icon">${def.icon}</span><span class="card-name">${def.name}</span>`;
+        btn.disabled = !(isActive && !card.used && cardApplicable(side, card.key));
+        btn.addEventListener('click', ()=> playCard(side, idx));
+        cardsRow.appendChild(btn);
+      });
     });
 
     el('nextBtn').style.display = roundOver ? 'inline-block' : 'none';
@@ -851,6 +1590,8 @@
 
   function endGame(){
     el('gameScreen').style.display = 'none';
+    el('draftScreen').style.display = 'none';
+    el('blindScreen').style.display = 'none';
     el('endScreen').style.display = 'block';
 
     const totalA = teams.A.squad.reduce((s,p)=>s+p.rating,0);
@@ -997,18 +1738,77 @@
 
   function resetToStart(){
     el('endScreen').style.display = 'none';
-    el('startScreen').style.display = 'block';
     el('gameScreen').style.display = 'none';
+    el('draftScreen').style.display = 'none';
+    el('blindScreen').style.display = 'none';
+    el('setupScreen').style.display = 'none';
+    el('homeScreen').style.display = 'block';
   }
 
   // ---- EVENT WIRING ----
-  el('startBtn').addEventListener('click', ()=>{
+  let selectedMode = 'auction';
+
+  const RULES_TEXT = {
+    auction: "Each manager gets a <b>1,200 credit</b> budget. Players go up one at a time — raise the bid or pass. Two passes in a row and the highest bidder wins them. Build <b>11</b> before the pool runs dry. Each side also starts with 2 random <b>Mystery Cards</b> — bonus budget, a discount, forcing your rival to sit out a turn, or swapping a player straight off their squad.",
+    quick: "No budget, no bidding. Managers take turns picking players straight onto their squad until both sides reach <b>11</b> — or hit Auto-Draft to fill both squads instantly.",
+    blind: "Each manager gets a <b>1,200 credit</b> budget — but only you ever see your own remaining cash. Every player gets a <b>secret bid</b> from both sides, revealed together. Highest sealed bid wins and pays exactly what they bid. Each side also gets 2 Mystery Cards (Bonus Budget, Discount) to play before locking in a bid.",
+    duo: "Same rules as Auction Mode, but each side is <b>two managers sharing one budget and squad</b>. The spotlight teammate calling the shots alternates every round, so both players stay involved. Mystery Cards apply here too."
+  };
+
+  document.querySelectorAll('.mode-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      selectedMode = card.dataset.mode;
+      const labels = {auction:'AUCTION MODE', quick:'QUICK MATCH — 11 V 11', blind:'BLIND AUCTION', duo:'DUO AUCTION — 2V2'};
+      const beginLabels = {auction:'Start the Auction', quick:'Start the Draft', blind:'Start the Blind Auction', duo:'Start the Duo Auction'};
+      el('setupModeLabel').textContent = labels[selectedMode];
+      el('setupRules').innerHTML = RULES_TEXT[selectedMode];
+      el('beginBtn').textContent = beginLabels[selectedMode];
+      el('mysteryRow').style.display = (selectedMode === 'auction' || selectedMode === 'duo') ? 'flex' : 'none';
+
+      const isDuo = selectedMode === 'duo';
+      el('labelA').textContent = isDuo ? 'TEAM BLUE — PLAYER 1' : 'MANAGER ONE — TEAM NAME';
+      el('labelB').textContent = isDuo ? 'TEAM RED — PLAYER 1' : 'MANAGER TWO — TEAM NAME';
+      el('nameA').placeholder = isDuo ? 'Player 1' : 'Team Blue';
+      el('nameB').placeholder = isDuo ? 'Player 1' : 'Team Red';
+      el('nameA2Row').style.display = isDuo ? 'block' : 'none';
+      el('nameB2Row').style.display = isDuo ? 'block' : 'none';
+
+      el('homeScreen').style.display = 'none';
+      el('setupScreen').style.display = 'block';
+    });
+  });
+
+  el('backBtn').addEventListener('click', ()=>{
+    el('setupScreen').style.display = 'none';
+    el('homeScreen').style.display = 'block';
+  });
+
+  el('beginBtn').addEventListener('click', ()=>{
+    el('setupScreen').style.display = 'none';
+    if(selectedMode === 'duo'){
+      const a1 = el('nameA').value.trim() || 'Player 1';
+      const a2 = el('nameA2').value.trim() || 'Player 2';
+      const b1 = el('nameB').value.trim() || 'Player 1';
+      const b2 = el('nameB2').value.trim() || 'Player 2';
+      el('gameScreen').style.display = 'block';
+      initGame(`${a1} & ${a2}`, `${b1} & ${b2}`, el('mysteryToggle').checked, [a1,a2], [b1,b2]);
+      return;
+    }
     const nameA = el('nameA').value.trim();
     const nameB = el('nameB').value.trim();
-    el('startScreen').style.display = 'none';
-    el('gameScreen').style.display = 'block';
-    initGame(nameA, nameB);
+    if(selectedMode === 'auction'){
+      el('gameScreen').style.display = 'block';
+      initGame(nameA, nameB, el('mysteryToggle').checked);
+    } else if(selectedMode === 'blind'){
+      el('blindScreen').style.display = 'block';
+      initBlindMode(nameA, nameB);
+    } else {
+      el('draftScreen').style.display = 'block';
+      initQuickMatch(nameA, nameB);
+    }
   });
+
+  el('autoDraftBtn').addEventListener('click', autoDraftRest);
 
   document.querySelectorAll('.bid-buttons button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
