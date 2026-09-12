@@ -1003,7 +1003,8 @@
     bonus:    {name:"Bonus Budget", icon:"💰", desc:"+120 credits, instantly.", modes:['auction','blind']},
     discount: {name:"Discount",     icon:"🏷️", desc:"Your next signing costs 20% less.", modes:['auction','blind']},
     skip:     {name:"Skip Rival",   icon:"⏭️", desc:"Force your rival to sit out their next turn this round.", modes:['auction']},
-    steal:    {name:"Player Swap",  icon:"🔄", desc:"Take a player from your rival's squad — they're refunded what they paid.", modes:['auction']}
+    steal:    {name:"Player Swap",  icon:"🔄", desc:"Take a player from your rival's squad — they're refunded what they paid.", modes:['auction']},
+    shield:   {name:"Shield",       icon:"🛡️", desc:"Protect one of your players from ever being stolen.", modes:['auction']}
   };
 
   function randomCardKey(mode){
@@ -1338,7 +1339,8 @@
     const rival = side === 'A' ? 'B' : 'A';
     if(key === 'discount') return !teams[side].discountActive;
     if(key === 'skip') return !teams[rival].forcedSkip;
-    if(key === 'steal') return teams[rival].squad.length > 0 && teams[side].squad.length < SQUAD_TARGET;
+    if(key === 'steal') return teams[rival].squad.some(p => !p.protected) && teams[side].squad.length < SQUAD_TARGET;
+    if(key === 'shield') return teams[side].squad.some(p => !p.protected);
     return true;
   }
 
@@ -1366,6 +1368,8 @@
       render();
     } else if(card.key === 'steal'){
       showStealPicker(side, idx);
+    } else if(card.key === 'shield'){
+      showShieldPicker(side, idx);
     }
   }
 
@@ -1377,7 +1381,12 @@
     picker = document.createElement('div');
     picker.className = 'steal-picker';
     picker.innerHTML = `<div class="steal-title">Choose a player to take from ${teams[rival].name}:</div>`;
+    const targets = teams[rival].squad.filter(p => !p.protected);
+    if(targets.length === 0){
+      picker.innerHTML += `<p style="font-size:12px;color:var(--chalk-dim);">Every player on their squad is shielded!</p>`;
+    }
     teams[rival].squad.forEach((p, pIdx)=>{
+      if(p.protected) return;
       const b = document.createElement('button');
       b.className = 'steal-option';
       b.textContent = `${p.name} — ${p.pos} · ${p.rating}`;
@@ -1400,6 +1409,38 @@
     teams[side].cards[idx].used = true;
     const cls = side === 'A' ? 'b' : 'r';
     log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Player Swap</span> — takes ${stolen.name} from ${teams[rival].name}${stolen.price ? ` (they're refunded ${stolen.price}cr)` : ''}`);
+    render();
+  }
+
+  function showShieldPicker(side, idx){
+    const panel = el('panel' + side);
+    let picker = panel.querySelector('.steal-picker');
+    if(picker) picker.remove();
+    picker = document.createElement('div');
+    picker.className = 'steal-picker';
+    picker.innerHTML = `<div class="steal-title">Choose a player of yours to shield permanently:</div>`;
+    teams[side].squad.forEach((p, pIdx)=>{
+      if(p.protected) return;
+      const b = document.createElement('button');
+      b.className = 'steal-option';
+      b.textContent = `${p.name} — ${p.pos} · ${p.rating}`;
+      b.addEventListener('click', ()=> executeShield(side, idx, pIdx));
+      picker.appendChild(b);
+    });
+    const cancel = document.createElement('button');
+    cancel.className = 'steal-cancel';
+    cancel.textContent = 'Cancel';
+    cancel.addEventListener('click', ()=> picker.remove());
+    picker.appendChild(cancel);
+    panel.appendChild(picker);
+  }
+
+  function executeShield(side, idx, playerIdx){
+    const player = teams[side].squad[playerIdx];
+    player.protected = true;
+    teams[side].cards[idx].used = true;
+    const cls = side === 'A' ? 'b' : 'r';
+    log(`<span class="${cls}">${teams[side].name}</span> plays <span class="g">Shield</span> — ${player.name} can never be stolen.`);
     render();
   }
 
@@ -1503,7 +1544,7 @@
       squad.slice().sort((a,b)=>b.rating-a.rating).forEach(p=>{
         const li = document.createElement('li');
         const priceTxt = (p.price === null || p.price === undefined) ? 'Drafted' : `${p.price}cr`;
-        li.innerHTML = `<span class="p-name"><span class="mini-avatar">${initials(p.name)}</span>${p.name}</span><span class="p-info">${p.pos} · ${p.rating} · ${priceTxt}</span>`;
+        li.innerHTML = `<span class="p-name"><span class="mini-avatar">${initials(p.name)}</span>${p.name}${p.protected ? ' 🛡️' : ''}</span><span class="p-info">${p.pos} · ${p.rating} · ${priceTxt}</span>`;
         ul.appendChild(li);
       });
     }
@@ -1749,7 +1790,7 @@
   let selectedMode = 'auction';
 
   const RULES_TEXT = {
-    auction: "Each manager gets a <b>1,200 credit</b> budget. Players go up one at a time — raise the bid or pass. Two passes in a row and the highest bidder wins them. Build <b>11</b> before the pool runs dry. Each side also starts with 2 random <b>Mystery Cards</b> — bonus budget, a discount, forcing your rival to sit out a turn, or swapping a player straight off their squad.",
+    auction: "Each manager gets a <b>1,200 credit</b> budget. Players go up one at a time — raise the bid or pass. Two passes in a row and the highest bidder wins them. Build <b>11</b> before the pool runs dry. Each side also starts with 2 random <b>Mystery Cards</b> — bonus budget, a discount, forcing your rival to sit out a turn, swapping a player straight off their squad, or shielding one of your own from ever being stolen.",
     quick: "No budget, no bidding. Managers take turns picking players straight onto their squad until both sides reach <b>11</b> — or hit Auto-Draft to fill both squads instantly.",
     blind: "Each manager gets a <b>1,200 credit</b> budget — but only you ever see your own remaining cash. Every player gets a <b>secret bid</b> from both sides, revealed together. Highest sealed bid wins and pays exactly what they bid. Each side also gets 2 Mystery Cards (Bonus Budget, Discount) to play before locking in a bid.",
     duo: "Same rules as Auction Mode, but each side is <b>two managers sharing one budget and squad</b>. The spotlight teammate calling the shots alternates every round, so both players stay involved. Mystery Cards apply here too."
