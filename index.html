@@ -794,6 +794,16 @@
       <input type="text" id="nameB2" placeholder="Teammate" maxlength="18">
     </div>
     <div class="rules" id="setupRules"></div>
+    <div class="toggle-row" id="aiRow">
+      <label class="switch">
+        <input type="checkbox" id="aiToggle">
+        <span class="slider"></span>
+      </label>
+      <div class="toggle-text">
+        <span class="toggle-title">Play vs CPU</span>
+        <span class="toggle-desc">Team Red is controlled by the computer instead of a second manager.</span>
+      </div>
+    </div>
     <div class="toggle-row" id="mysteryRow">
       <label class="switch">
         <input type="checkbox" id="mysteryToggle">
@@ -980,6 +990,58 @@
     {name:"Garrincha", pos:"FW", rating:90, base:90, type:"icon"},
     {name:"George Best", pos:"MF", rating:89, base:85, type:"icon"},
     {name:"Bobby Moore", pos:"DF", rating:88, base:85, type:"icon"},
+    {name:"Alfredo Di Stéfano", pos:"FW", rating:95, base:122, type:"icon"},
+    {name:"Ferenc Puskás", pos:"FW", rating:94, base:112, type:"icon"},
+    {name:"Gerd Müller", pos:"FW", rating:94, base:114, type:"icon"},
+    {name:"Eusébio", pos:"FW", rating:93, base:106, type:"icon"},
+    {name:"Andrea Pirlo", pos:"MF", rating:91, base:100, type:"icon"},
+    {name:"Kaká", pos:"MF", rating:90, base:100, type:"icon"},
+    {name:"Rivaldo", pos:"MF", rating:90, base:96, type:"icon"},
+    {name:"Zico", pos:"MF", rating:92, base:100, type:"icon"},
+    {name:"Luís Figo", pos:"MF", rating:90, base:92, type:"icon"},
+    {name:"Ryan Giggs", pos:"MF", rating:88, base:86, type:"icon"},
+    {name:"David Beckham", pos:"MF", rating:88, base:88, type:"icon"},
+    {name:"Thierry Henry", pos:"FW", rating:92, base:110, type:"icon"},
+    {name:"Raúl González", pos:"FW", rating:90, base:96, type:"icon"},
+    {name:"Didier Drogba", pos:"FW", rating:89, base:92, type:"icon"},
+    {name:"Samuel Eto'o", pos:"FW", rating:89, base:90, type:"icon"},
+    {name:"Roberto Carlos", pos:"DF", rating:91, base:96, type:"icon"},
+    {name:"Cafu", pos:"DF", rating:89, base:88, type:"icon"},
+    {name:"Fabio Cannavaro", pos:"DF", rating:90, base:92, type:"icon"},
+    {name:"Gianluigi Buffon", pos:"GK", rating:91, base:96, type:"icon"},
+    {name:"Iker Casillas", pos:"GK", rating:90, base:92, type:"icon"},
+    {name:"Marco van Basten", pos:"FW", rating:93, base:108, type:"icon"},
+    {name:"Ruud Gullit", pos:"MF", rating:91, base:96, type:"icon"},
+    {name:"Frank Rijkaard", pos:"MF", rating:89, base:88, type:"icon"},
+    {name:"Lothar Matthäus", pos:"MF", rating:91, base:96, type:"icon"},
+    {name:"Jürgen Klinsmann", pos:"FW", rating:90, base:94, type:"icon"},
+    {name:"Oliver Kahn", pos:"GK", rating:90, base:92, type:"icon"},
+    {name:"Xavi Hernández", pos:"MF", rating:91, base:98, type:"icon"},
+    {name:"Andrés Iniesta", pos:"MF", rating:92, base:102, type:"icon"},
+    {name:"Carles Puyol", pos:"DF", rating:89, base:88, type:"icon"},
+    {name:"Gerard Piqué", pos:"DF", rating:87, base:86, type:"icon"},
+    {name:"Sergio Ramos", pos:"DF", rating:89, base:92, type:"icon"},
+    {name:"Steven Gerrard", pos:"MF", rating:90, base:94, type:"icon"},
+    {name:"Frank Lampard", pos:"MF", rating:89, base:90, type:"icon"},
+    {name:"John Terry", pos:"DF", rating:88, base:86, type:"icon"},
+    {name:"Rio Ferdinand", pos:"DF", rating:87, base:84, type:"icon"},
+    {name:"Patrick Vieira", pos:"MF", rating:88, base:86, type:"icon"},
+    {name:"Marcel Desailly", pos:"DF", rating:87, base:84, type:"icon"},
+    {name:"Peter Schmeichel", pos:"GK", rating:89, base:88, type:"icon"},
+    {name:"Dennis Bergkamp", pos:"FW", rating:90, base:94, type:"icon"},
+    {name:"Edwin van der Sar", pos:"GK", rating:88, base:86, type:"icon"},
+    {name:"Clarence Seedorf", pos:"MF", rating:87, base:84, type:"icon"},
+    {name:"Hristo Stoichkov", pos:"FW", rating:88, base:88, type:"icon"},
+    {name:"Gabriel Batistuta", pos:"FW", rating:90, base:96, type:"icon"},
+    {name:"Javier Zanetti", pos:"DF", rating:86, base:82, type:"icon"},
+    {name:"Alessandro Del Piero", pos:"FW", rating:89, base:92, type:"icon"},
+    {name:"Francesco Totti", pos:"FW", rating:90, base:96, type:"icon"},
+    {name:"Filippo Inzaghi", pos:"FW", rating:86, base:82, type:"icon"},
+    {name:"Paolo Rossi", pos:"FW", rating:88, base:86, type:"icon"},
+    {name:"Didier Deschamps", pos:"MF", rating:85, base:78, type:"icon"},
+    {name:"David Villa", pos:"FW", rating:88, base:90, type:"icon"},
+    {name:"Fernando Torres", pos:"FW", rating:87, base:86, type:"icon"},
+    {name:"Diego Forlán", pos:"FW", rating:86, base:82, type:"icon"},
     // CURRENT STARS
     {name:"Kylian Mbappé", pos:"FW", rating:91, base:145, type:"current"},
     {name:"Erling Haaland", pos:"FW", rating:91, base:140, type:"current"},
@@ -993,6 +1055,67 @@
     {name:"Thibaut Courtois", pos:"GK", rating:89, base:95, type:"current"},
     {name:"Alisson Becker", pos:"GK", rating:88, base:90, type:"current"},
     {name:"Bukayo Saka", pos:"FW", rating:87, base:95, type:"current"},
+    {name:"Cristiano Ronaldo", pos:"FW", rating:90, base:138, type:"current"},
+    {name:"Neymar Jr.", pos:"FW", rating:88, base:118, type:"current"},
+    {name:"Robert Lewandowski", pos:"FW", rating:89, base:115, type:"current"},
+    {name:"Luka Modrić", pos:"MF", rating:88, base:100, type:"current"},
+    {name:"Karim Benzema", pos:"FW", rating:88, base:108, type:"current"},
+    {name:"Sadio Mané", pos:"FW", rating:87, base:100, type:"current"},
+    {name:"Mohamed Salah", pos:"FW", rating:89, base:112, type:"current"},
+    {name:"N'Golo Kanté", pos:"MF", rating:87, base:95, type:"current"},
+    {name:"Casemiro", pos:"MF", rating:87, base:95, type:"current"},
+    {name:"Antoine Griezmann", pos:"FW", rating:88, base:100, type:"current"},
+    {name:"Son Heung-min", pos:"FW", rating:87, base:98, type:"current"},
+    {name:"Phil Foden", pos:"MF", rating:87, base:100, type:"current"},
+    {name:"Pedri", pos:"MF", rating:87, base:98, type:"current"},
+    {name:"Federico Valverde", pos:"MF", rating:87, base:98, type:"current"},
+    {name:"Declan Rice", pos:"MF", rating:86, base:90, type:"current"},
+    {name:"Martin Ødegaard", pos:"MF", rating:87, base:98, type:"current"},
+    {name:"Joshua Kimmich", pos:"MF", rating:88, base:100, type:"current"},
+    {name:"Frenkie de Jong", pos:"MF", rating:86, base:92, type:"current"},
+    {name:"Marcus Rashford", pos:"FW", rating:86, base:92, type:"current"},
+    {name:"Alphonso Davies", pos:"DF", rating:86, base:90, type:"current"},
+    {name:"Achraf Hakimi", pos:"DF", rating:86, base:90, type:"current"},
+    {name:"Victor Osimhen", pos:"FW", rating:87, base:98, type:"current"},
+    {name:"Florian Wirtz", pos:"MF", rating:87, base:98, type:"current"},
+    {name:"Jamal Musiala", pos:"MF", rating:87, base:98, type:"current"},
+    {name:"Julián Álvarez", pos:"FW", rating:86, base:92, type:"current"},
+    {name:"Ilkay Gündoğan", pos:"MF", rating:86, base:90, type:"current"},
+    {name:"Luis Suárez", pos:"FW", rating:88, base:98, type:"current"},
+    {name:"Radamel Falcao", pos:"FW", rating:85, base:82, type:"current"},
+    {name:"James Rodríguez", pos:"MF", rating:85, base:84, type:"current"},
+    {name:"Sergio Agüero", pos:"FW", rating:88, base:98, type:"current"},
+    {name:"Paul Pogba", pos:"MF", rating:86, base:88, type:"current"},
+    {name:"Toni Kroos", pos:"MF", rating:88, base:100, type:"current"},
+    {name:"Sergio Busquets", pos:"MF", rating:85, base:82, type:"current"},
+    {name:"Mats Hummels", pos:"DF", rating:85, base:82, type:"current"},
+    {name:"Manuel Neuer", pos:"GK", rating:88, base:92, type:"current"},
+    {name:"Marc-André ter Stegen", pos:"GK", rating:87, base:88, type:"current"},
+    {name:"Bernardo Silva", pos:"MF", rating:87, base:92, type:"current"},
+    {name:"Rúben Dias", pos:"DF", rating:87, base:90, type:"current"},
+    {name:"Trent Alexander-Arnold", pos:"DF", rating:86, base:88, type:"current"},
+    {name:"Kyle Walker", pos:"DF", rating:85, base:82, type:"current"},
+    {name:"John Stones", pos:"DF", rating:85, base:82, type:"current"},
+    {name:"Raheem Sterling", pos:"FW", rating:85, base:86, type:"current"},
+    {name:"Jack Grealish", pos:"MF", rating:85, base:86, type:"current"},
+    {name:"Bruno Fernandes", pos:"MF", rating:87, base:94, type:"current"},
+    {name:"Sergej Milinković-Savić", pos:"MF", rating:85, base:84, type:"current"},
+    {name:"Rafael Leão", pos:"FW", rating:86, base:88, type:"current"},
+    {name:"Khvicha Kvaratskhelia", pos:"FW", rating:86, base:88, type:"current"},
+    {name:"Lautaro Martínez", pos:"FW", rating:87, base:94, type:"current"},
+    {name:"Nicolò Barella", pos:"MF", rating:85, base:84, type:"current"},
+    {name:"Federico Chiesa", pos:"FW", rating:85, base:84, type:"current"},
+    {name:"Kingsley Coman", pos:"FW", rating:85, base:84, type:"current"},
+    {name:"Leroy Sané", pos:"FW", rating:85, base:86, type:"current"},
+    {name:"Serge Gnabry", pos:"FW", rating:85, base:82, type:"current"},
+    {name:"Thomas Müller", pos:"FW", rating:86, base:88, type:"current"},
+    {name:"Manuel Akanji", pos:"DF", rating:84, base:78, type:"current"},
+    {name:"Antonio Rüdiger", pos:"DF", rating:86, base:86, type:"current"},
+    {name:"David Alaba", pos:"DF", rating:86, base:88, type:"current"},
+    {name:"Aurélien Tchouaméni", pos:"MF", rating:85, base:84, type:"current"},
+    {name:"Eduardo Camavinga", pos:"MF", rating:84, base:80, type:"current"},
+    {name:"Dani Carvajal", pos:"DF", rating:85, base:82, type:"current"},
+    {name:"Ousmane Dembélé", pos:"FW", rating:85, base:84, type:"current"},
   ];
 
   const SQUAD_TARGET = 11;
@@ -1016,7 +1139,7 @@
     return [{key:randomCardKey(mode), used:false}, {key:randomCardKey(mode), used:false}];
   }
 
-  let teams, pool, current, currentBid, highestBidder, passStreak, turn, roundOver, mysteryMode, duoRoundIndex;
+  let teams, pool, current, currentBid, highestBidder, passStreak, turn, roundOver, mysteryMode, duoRoundIndex, aiSide;
   let blindStep, blindBidA, blindBidB, pendingNextEntrySide;
 
   const el = id => document.getElementById(id);
@@ -1068,7 +1191,7 @@
       </div>`;
   }
 
-  function initGame(nameA, nameB, mystery, playersA, playersB){
+  function initGame(nameA, nameB, mystery, playersA, playersB, vsAI){
     teams = {
       A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[], cards:freshCards('auction'), discountActive:false, forcedSkip:false, players:playersA || null},
       B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[], cards:freshCards('auction'), discountActive:false, forcedSkip:false, players:playersB || null}
@@ -1076,6 +1199,7 @@
     pool = shuffled(PLAYER_POOL);
     turn = "A";
     mysteryMode = !!mystery;
+    aiSide = vsAI ? 'B' : null;
     duoRoundIndex = -1;
     el('sbNameA').textContent = teams.A.name.toUpperCase();
     el('sbNameB').textContent = teams.B.name.toUpperCase();
@@ -1092,13 +1216,14 @@
   }
 
   // ---------- QUICK MATCH (11 v 11 DRAFT) ----------
-  function initQuickMatch(nameA, nameB){
+  function initQuickMatch(nameA, nameB, vsAI){
     teams = {
       A: {name:nameA || "Team Blue", budget:0, squad:[]},
       B: {name:nameB || "Team Red", budget:0, squad:[]}
     };
     pool = shuffled(PLAYER_POOL);
     turn = "A";
+    aiSide = vsAI ? 'B' : null;
     el('draftNameA').textContent = teams.A.name.toUpperCase();
     el('draftNameB').textContent = teams.B.name.toUpperCase();
     renderDraft();
@@ -1122,6 +1247,14 @@
     renderDraft();
   }
 
+  function aiDraftPick(){
+    if(pool.length === 0 || turn !== aiSide) return;
+    const ranked = pool.map((p, idx)=>({p, idx})).sort((a,b)=> b.p.rating - a.p.rating);
+    const topPicks = ranked.slice(0, Math.min(3, ranked.length));
+    const choice = topPicks[Math.floor(Math.random() * topPicks.length)];
+    pickDraftPlayer(choice.idx);
+  }
+
   function autoDraftRest(){
     while(pool.length > 0 && !bothFull()){
       if(teams[turn].squad.length >= SQUAD_TARGET){
@@ -1142,15 +1275,20 @@
     el('draftCountB').textContent = teams.B.squad.length;
 
     const flag = el('draftTurnFlag');
-    flag.textContent = `${teams[turn].name.toUpperCase()} — PICK A PLAYER`;
+    flag.textContent = aiSide === turn ? `${teams[turn].name.toUpperCase()} IS THINKING…` : `${teams[turn].name.toUpperCase()} — PICK A PLAYER`;
     flag.className = 'turn-flag ' + (turn === 'A' ? 'blue' : 'red');
 
     const grid = el('draftGrid');
-    grid.innerHTML = '';
     if(pool.length === 0){
       grid.innerHTML = '<div class="draft-empty">No players left in the pool</div>';
       return;
     }
+    if(aiSide === turn){
+      grid.innerHTML = `<div class="draft-empty">${teams[turn].name} is picking…</div>`;
+      setTimeout(aiDraftPick, 600);
+      return;
+    }
+    grid.innerHTML = '';
     pool.forEach((p, idx)=>{
       const btn = document.createElement('button');
       btn.className = 'draft-card ' + (turn === 'A' ? 'turn-blue' : 'turn-red');
@@ -1161,12 +1299,13 @@
   }
 
   // ---------- BLIND AUCTION (SEALED BID MODE) ----------
-  function initBlindMode(nameA, nameB){
+  function initBlindMode(nameA, nameB, vsAI){
     teams = {
       A: {name:nameA || "Team Blue", budget:STARTING_BUDGET, squad:[], cards:freshCards('blind'), discountActive:false},
       B: {name:nameB || "Team Red", budget:STARTING_BUDGET, squad:[], cards:freshCards('blind'), discountActive:false}
     };
     pool = shuffled(PLAYER_POOL);
+    aiSide = vsAI ? 'B' : null;
     el('blindNameA').textContent = teams.A.name.toUpperCase();
     el('blindNameB').textContent = teams.B.name.toUpperCase();
     startBlindRound();
@@ -1199,10 +1338,42 @@
       <p style="font-size:12px;color:var(--chalk-dim);margin:-6px 0 14px;">Base price: ${current.base}cr</p>
       <button class="btn-primary" id="beginBidBtn" style="max-width:260px;margin:0 auto;">Begin Sealed Bidding</button>
     `;
-    el('beginBidBtn').addEventListener('click', ()=>{
-      blindStep = blindBidA === null ? 'entryA' : (blindBidB === null ? 'entryB' : 'result');
+    el('beginBidBtn').addEventListener('click', proceedAfterBid);
+  }
+
+  function proceedAfterBid(){
+    const otherSide = blindBidA === null ? 'A' : (blindBidB === null ? 'B' : null);
+    if(otherSide === null){
+      blindStep = 'result';
       renderBlind();
-    });
+      return;
+    }
+    if(aiSide === otherSide){
+      setTimeout(()=> aiBlindBid(otherSide), 500);
+      const stage = el('blindStage');
+      stage.innerHTML = `<div class="stage-label">SEALED BIDDING</div>${playerCardHTML(current)}<p style="font-size:13px;color:var(--chalk-dim);margin-top:14px;">${teams[aiSide].name} is deciding…</p>`;
+      return;
+    }
+    if(aiSide){
+      // vs CPU game — no privacy needed, go straight to the human's entry
+      blindStep = otherSide === 'A' ? 'entryA' : 'entryB';
+      renderBlind();
+    } else {
+      pendingNextEntrySide = otherSide;
+      blindStep = 'pass-device';
+      renderBlind();
+    }
+  }
+
+  function aiBlindBid(side){
+    const t = teams[side];
+    const remainingSlots = Math.max(SQUAD_TARGET - t.squad.length, 1);
+    const avgPerSlot = t.budget / remainingSlots;
+    const ratingFactor = current.rating / 100;
+    let bid = Math.round(avgPerSlot * (0.55 + ratingFactor * 0.6) * (0.85 + Math.random() * 0.3));
+    bid = Math.max(0, Math.min(bid, t.budget));
+    if(side === 'A') blindBidA = bid; else blindBidB = bid;
+    proceedAfterBid();
   }
 
   function renderBlindEntry(side, presetValue){
@@ -1225,16 +1396,7 @@
       if(isNaN(val) || val < 0) val = 0;
       if(val > t.budget) val = t.budget;
       if(side === 'A') blindBidA = val; else blindBidB = val;
-
-      const otherSide = side === 'A' ? 'B' : 'A';
-      const otherVal = otherSide === 'A' ? blindBidA : blindBidB;
-      if(otherVal === null){
-        pendingNextEntrySide = otherSide;
-        blindStep = 'pass-device';
-      } else {
-        blindStep = 'result';
-      }
-      renderBlind();
+      proceedAfterBid();
     });
   }
 
@@ -1511,6 +1673,25 @@
       return;
     }
     render();
+    if(aiSide && turn === aiSide){
+      setTimeout(aiTakeTurn, 700);
+    }
+  }
+
+  function aiTakeTurn(){
+    if(roundOver || turn !== aiSide || !canBid(aiSide)) return;
+    const t = teams[aiSide];
+    const remainingSlots = Math.max(SQUAD_TARGET - t.squad.length, 1);
+    const avgPerSlot = t.budget / remainingSlots;
+    const ratingFactor = current.rating / 100;
+    const threshold = avgPerSlot * (0.55 + ratingFactor * 0.6) * (0.85 + Math.random() * 0.3);
+    const increments = [10, 25, 50].filter(inc => currentBid + inc <= t.budget);
+    if(currentBid < threshold && increments.length > 0){
+      const inc = increments[Math.floor(Math.random() * increments.length)];
+      doBid(aiSide, inc);
+    } else {
+      doPass(aiSide, false);
+    }
   }
 
   function resolveRound(){
@@ -1579,6 +1760,9 @@
     if(roundOver){
       flag.textContent = 'Round complete';
       flag.className = 'turn-flag';
+    } else if(aiSide === turn){
+      flag.textContent = `${teams[turn].name.toUpperCase()} IS THINKING…`;
+      flag.className = 'turn-flag ' + (turn === 'A' ? 'blue' : 'red');
     } else {
       const side = teams[turn];
       const label = side.players
@@ -1591,7 +1775,8 @@
     // panels
     ['A','B'].forEach(side=>{
       const panel = el('panel' + side);
-      const isActive = !roundOver && turn === side;
+      const isAI = aiSide === side;
+      const isActive = !roundOver && turn === side && !isAI;
       panel.className = `panel ${side === 'A' ? 'blue' : 'red'} ${isActive ? 'active' : ''}`;
       const buttons = panel.querySelectorAll('.bid-buttons button');
       const passBtn = panel.querySelector('.pass-btn');
@@ -1599,7 +1784,9 @@
       buttons.forEach(b => b.disabled = !enabled);
       passBtn.disabled = !isActive;
       const note = el('note' + side);
-      if(teams[side].squad.length >= SQUAD_TARGET){
+      if(isAI){
+        note.textContent = 'Controlled by CPU';
+      } else if(teams[side].squad.length >= SQUAD_TARGET){
         note.textContent = 'Squad complete (11/11)';
       } else if(teams[side].budget < currentBid + MIN_INCREMENT && !roundOver){
         note.textContent = 'Not enough budget to raise';
@@ -1805,6 +1992,7 @@
       el('setupRules').innerHTML = RULES_TEXT[selectedMode];
       el('beginBtn').textContent = beginLabels[selectedMode];
       el('mysteryRow').style.display = (selectedMode === 'auction' || selectedMode === 'duo') ? 'flex' : 'none';
+      el('aiRow').style.display = selectedMode === 'duo' ? 'none' : 'flex';
 
       const isDuo = selectedMode === 'duo';
       el('labelA').textContent = isDuo ? 'TEAM BLUE — PLAYER 1' : 'MANAGER ONE — TEAM NAME';
@@ -1836,16 +2024,18 @@
       return;
     }
     const nameA = el('nameA').value.trim();
-    const nameB = el('nameB').value.trim();
+    let nameB = el('nameB').value.trim();
+    const vsAI = el('aiToggle').checked;
+    if(vsAI && !nameB) nameB = 'CPU';
     if(selectedMode === 'auction'){
       el('gameScreen').style.display = 'block';
-      initGame(nameA, nameB, el('mysteryToggle').checked);
+      initGame(nameA, nameB, el('mysteryToggle').checked, null, null, vsAI);
     } else if(selectedMode === 'blind'){
       el('blindScreen').style.display = 'block';
-      initBlindMode(nameA, nameB);
+      initBlindMode(nameA, nameB, vsAI);
     } else {
       el('draftScreen').style.display = 'block';
-      initQuickMatch(nameA, nameB);
+      initQuickMatch(nameA, nameB, vsAI);
     }
   });
 
